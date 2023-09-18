@@ -7,7 +7,11 @@ import 'package:flutter/services.dart';
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   MainAppBar({super.key});
 
-  String Month = DateFormat('yyyy년 MM월').format(DateTime.now());
+  final String Month = DateFormat('yyyy년 MM월').format(DateTime.now());
+
+  onButtonLeftChevron() {}
+
+  onButtonRightChevron() {}
 
   @override
   Widget build(BuildContext context) {
@@ -20,24 +24,39 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       //앱바 높이
       toolbarHeight: 70,
-      //글자 가운데로
-      centerTitle: true,
       //글자 색
       foregroundColor: Colors.white,
       //앱 바 색
       backgroundColor: Colors.orange,
       //앱 바 밑에 음영 사라지게 만드는 코드
       elevation: 2,
-      leading: Icon(Icons.chevron_left_rounded),
       title: Text(
-        Month,
+        'ABC 가계부',
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 25,
           fontWeight: FontWeight.w600,
+          color: Colors.white,
+          fontFamily: "ABCdiary",
         ),
       ),
       actions: [
-        Icon(Icons.chevron_right_rounded),
+        IconButton(
+          onPressed: null,
+          icon: Icon(
+            Icons.question_answer,
+            size: 30,
+            color: Colors.white,
+          ),
+        ),
+        IconButton(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          onPressed: null,
+          icon: Icon(
+            Icons.question_mark,
+            size: 30,
+            color: Colors.white,
+          ),
+        ),
       ],
     );
   }

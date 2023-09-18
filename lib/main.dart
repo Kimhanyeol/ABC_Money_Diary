@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:abc_money_diary/screens/home_screen.dart';
 
+import 'package:intl/date_symbol_data_local.dart';
+
 void main() {
-  runApp(App());
+  initializeDateFormatting().then((_) => runApp(App()));
 }
 
 class App extends StatelessWidget {
