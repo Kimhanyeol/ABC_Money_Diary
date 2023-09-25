@@ -9,10 +9,6 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final String Month = DateFormat('yyyy년 MM월').format(DateTime.now());
 
-  onButtonLeftChevron() {}
-
-  onButtonRightChevron() {}
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -36,7 +32,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
           fontSize: 25,
           fontWeight: FontWeight.w600,
           color: Colors.white,
-          fontFamily: "ABCdiary",
+          fontFamily: "Yeongdeok-Sea",
         ),
       ),
       actions: [
@@ -52,7 +48,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.symmetric(horizontal: 20),
           onPressed: null,
           icon: Icon(
-            Icons.question_mark,
+            Icons.help,
             size: 30,
             color: Colors.white,
           ),
