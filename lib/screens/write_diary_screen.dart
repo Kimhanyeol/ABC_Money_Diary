@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class WriteDiaryScreen extends StatefulWidget {
@@ -234,20 +235,26 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
           //날짜 선택하는 부분
           Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '날짜',
-                  style: TextStyle(
-                    fontFamily: "HakgyoansimWoojuR",
-                    fontWeight: FontWeight.w600,
-                    fontSize: 25,
-                    color: Colors.grey,
+                SizedBox(
+                  child: Row(
+                    children: [
+                      Text(
+                        '날짜',
+                        style: TextStyle(
+                          fontFamily: "HakgyoansimWoojuR",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 25,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                    ],
                   ),
                 ),
-                Icon(Icons.chevron_right_rounded, color: Colors.grey),
 
                 //날짜선택
                 TextButton(
@@ -282,28 +289,118 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
             ),
           ),
 
+          //분류 선택하는 부분
           Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '분류',
-                  style: TextStyle(
-                    fontFamily: "HakgyoansimWoojuR",
-                    fontWeight: FontWeight.w600,
-                    fontSize: 25,
-                    color: Colors.grey,
+                SizedBox(
+                  child: Row(
+                    children: [
+                      Text(
+                        '분류',
+                        style: TextStyle(
+                          fontFamily: "HakgyoansimWoojuR",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 25,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                    ],
                   ),
                 ),
-                Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                Flexible(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: '분류를 입력하세요',
+                      hintText: 'ex) 식비, 교통비...',
 
+                      //텍스트 필드 내에 여백이 싹 사라짐
+                      isCollapsed: true,
 
-
+                      //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 0,
+                        horizontal: 5,
+                      ),
+                    ),
+                    style: TextStyle(
+                      color: Colors.brown,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ],
             ),
-          )
+          ),
+
+          //금액 입력하는 부분
+          Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  child: Row(
+                    children: [
+                      Text(
+                        '금액',
+                        style: TextStyle(
+                          fontFamily: "HakgyoansimWoojuR",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 25,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    
+                    //키보드에서 숫자 외에 .-/ 이런 거 입력 못하게 막는 코드
+                    //3자리마다 , 찍어주고 ￦표시 띄워주는 코드
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                      CurrencyTextInputFormatter(
+                        locale: 'ko',
+                        decimalDigits: 0,
+                        symbol: '￦ '
+                      )
+                    ],
+                    
+                    decoration: InputDecoration(
+                      labelText: '금액을 입력하세요',
+
+                      //텍스트 필드 내에 여백이 싹 사라짐
+                      isCollapsed: true,
+
+                      //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 0,
+                        horizontal: 5,
+                      ),
+                    ),
+                    style: TextStyle(
+                      color: Colors.brown,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
         ],
       ),
     );
