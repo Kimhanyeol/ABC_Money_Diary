@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 class WriteDiaryScreen extends StatefulWidget {
   const WriteDiaryScreen({super.key});
@@ -101,6 +100,12 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     }
   }
 
+  //내용 부분 컨트롤러
+  final TextEditingController _ContentTextEditingController = TextEditingController();
+
+  //메모 부분 컨트롤러
+  final TextEditingController _MemoTextEditingController = TextEditingController();
+
   @override
   void initState() {
     isSelected = [aButton, bButton, cButton];
@@ -131,6 +136,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         //스테이터스바 투명하게 만드는 부분
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -170,238 +176,354 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          //ABC 선택하는 부분
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(vertical: 25, horizontal: 25),
-            decoration: BoxDecoration(
-              color: Colors.orange,
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            //ABC 선택하는 부분
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
+              child: ToggleButtons(
+                borderRadius: BorderRadius.circular(20),
+                //선택한 버튼의 테두리 색
+                selectedBorderColor: Colors.orange,
+                //테두리 색
+                borderColor: Colors.orange,
+                //선택한 버튼의 배경색
+                fillColor: Colors.orange,
+                //기본 버튼들의 글자색
+                color: Colors.orange,
+                //선택한 버튼의 글자색
+                selectedColor: Colors.white,
+                //터치 이펙트 색
+                splashColor: Colors.white30,
+                isSelected: isSelected,
+                onPressed: onTapToggleButton,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
+                    child: Text(
+                      'A',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Yeongdeok-Sea",
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
+                    child: Text(
+                      'B',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Yeongdeok-Sea",
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
+                    child: Text(
+                      'C',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Yeongdeok-Sea",
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: ToggleButtons(
-              renderBorder: false,
-              fillColor: Colors.orange,
-              //선택한 버튼의 배경색
-              color: Colors.white.withOpacity(0.6),
-              //기본 버튼들의 글자색
-              selectedColor: Colors.white,
-              //선택한 버튼의 글자색
-              splashColor: Colors.white30,
-              //터치 이펙트 색
-              isSelected: isSelected,
-              onPressed: onTapToggleButton,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-                  child: Text(
-                    'A',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "ABCdiary",
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-                  child: Text(
-                    'B',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "ABCdiary",
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-                  child: Text(
-                    'C',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "ABCdiary",
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
 
-          //날짜 선택하는 부분
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  child: Row(
-                    children: [
-                      Text(
-                        '날짜',
-                        style: TextStyle(
-                          fontFamily: "HakgyoansimWoojuR",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 25,
-                          color: Colors.grey,
+            //날짜 선택하는 부분
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '날짜',
+                          style: TextStyle(
+                            fontFamily: "HakgyoansimWoojuR",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 25,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                      ],
+                    ),
+                  ),
+
+                  //날짜선택
+                  TextButton(
+                    onPressed: () => onTapDateButton(context),
+                    child: Text(
+                      getToday(),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.brown,
+                      ),
+                    ),
+                  ),
+
+                  //시간선택
+                  TextButton(
+                    onPressed: () => onTapTimeButton(context),
+                    child: Text(
+                      getTimeNow(),
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.brown,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            //분류 선택하는 부분
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.fromLTRB(20, 5, 20, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '분류',
+                          style: TextStyle(
+                            fontFamily: "HakgyoansimWoojuR",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 25,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: '분류를 입력하세요',
+                        hintText: 'ex) 식비, 교통비...',
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(color: Colors.brown.shade200),
+                        hintStyle: TextStyle(color: Colors.brown.shade200),
+
+                        //텍스트 필드 내에 여백이 싹 사라짐
+                        //isCollapsed: true,
+
+                        //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 5,
                         ),
                       ),
-                      Icon(Icons.chevron_right_rounded, color: Colors.grey),
-                    ],
-                  ),
-                ),
-
-                //날짜선택
-                TextButton(
-                  onPressed: () => onTapDateButton(context),
-                  child: Text(
-                    getToday(),
-                    style: TextStyle(
-                      //decoration: TextDecoration.underline,
-                      //fontFamily: "HakgyoansimWoojuR",
-                      fontSize: 18,
-                      //fontWeight: FontWeight.w600,
-                      color: Colors.brown,
+                      style: TextStyle(
+                        color: Colors.brown,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-
-                //시간선택
-                TextButton(
-                  onPressed: () => onTapTimeButton(context),
-                  child: Text(
-                    getTimeNow(),
-                    style: TextStyle(
-                      //decoration: TextDecoration.underline,
-                      //fontFamily: "HakgyoansimWoojuR",
-                      fontSize: 15,
-                      //fontWeight: FontWeight.w600,
-                      color: Colors.brown,
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          //분류 선택하는 부분
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  child: Row(
-                    children: [
-                      Text(
-                        '분류',
-                        style: TextStyle(
-                          fontFamily: "HakgyoansimWoojuR",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 25,
-                          color: Colors.grey,
+            //금액 입력하는 부분
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '금액',
+                          style: TextStyle(
+                            fontFamily: "HakgyoansimWoojuR",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 25,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+
+                      //키보드에서 숫자 외에 .-/ 이런 거 입력 못하게 막는 코드
+                      //3자리마다 , 찍어주고 ￦표시 띄워주는 코드
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                        CurrencyTextInputFormatter(
+                            locale: 'ko', decimalDigits: 0, symbol: '￦ ')
+                      ],
+
+                      decoration: InputDecoration(
+                        labelText: '금액을 입력하세요',
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(color: Colors.brown.shade200),
+                        //텍스트 필드 내에 여백이 싹 사라짐
+                        //isCollapsed: true,
+
+                        //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 5,
                         ),
                       ),
-                      Icon(Icons.chevron_right_rounded, color: Colors.grey),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: '분류를 입력하세요',
-                      hintText: 'ex) 식비, 교통비...',
-
-                      //텍스트 필드 내에 여백이 싹 사라짐
-                      isCollapsed: true,
-
-                      //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 0,
-                        horizontal: 5,
+                      style: TextStyle(
+                        color: Colors.brown,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    style: TextStyle(
-                      color: Colors.brown,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                  ),
+                ],
+              ),
+            ),
+
+            //내용 입력하는 부분
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.fromLTRB(20, 10, 20, 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '내용',
+                          style: TextStyle(
+                            fontFamily: "HakgyoansimWoojuR",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 25,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
+                  Flexible(
+                    child: TextField(
+                      controller: _ContentTextEditingController,
+                      decoration: InputDecoration(
+                        labelText: '내용을 입력하세요',
+                        hintText: 'ex) 점심 값, 군것질...',
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(color: Colors.brown.shade200),
+                        hintStyle: TextStyle(color: Colors.brown.shade200),
 
-          //금액 입력하는 부분
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  child: Row(
-                    children: [
-                      Text(
-                        '금액',
-                        style: TextStyle(
-                          fontFamily: "HakgyoansimWoojuR",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 25,
-                          color: Colors.grey,
+                        //한 번에 내용 삭제 하는 아이콘(suffixIcon이 오른쪽)
+                        suffixIcon: GestureDetector(
+                          onTap: () => _ContentTextEditingController.clear(),
+                          child: Icon(
+                            Icons.cancel,
+                          ),
+                        ),
+
+                        //텍스트 필드 내에 여백이 싹 사라짐
+                        //isCollapsed: true,
+
+                        //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 5,
                         ),
                       ),
-                      Icon(Icons.chevron_right_rounded, color: Colors.grey),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    
-                    //키보드에서 숫자 외에 .-/ 이런 거 입력 못하게 막는 코드
-                    //3자리마다 , 찍어주고 ￦표시 띄워주는 코드
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      CurrencyTextInputFormatter(
-                        locale: 'ko',
-                        decimalDigits: 0,
-                        symbol: '￦ '
-                      )
-                    ],
-                    
-                    decoration: InputDecoration(
-                      labelText: '금액을 입력하세요',
-
-                      //텍스트 필드 내에 여백이 싹 사라짐
-                      isCollapsed: true,
-
-                      //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 0,
-                        horizontal: 5,
+                      style: TextStyle(
+                        color: Colors.brown,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    style: TextStyle(
-                      color: Colors.brown,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                  ),
+                ],
+              ),
+            ),
+
+            //필수 항목과 선택 항목 구분선
+            Container(
+              height: 10,
+              color: Colors.grey.shade300,
+            ),
+
+            //메모 입력하는 부분
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.fromLTRB(20, 10, 20, 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: TextField(
+                      controller: _MemoTextEditingController,
+                      decoration: InputDecoration(
+                        labelText: '메모',
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(color: Colors.brown.shade200),
+
+                        //오른쪽 아이콘
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                          },
+                          child: Icon(
+                            Icons.camera_alt,
+                          ),
+                        ),
+
+                        //텍스트 필드 내에 여백이 싹 사라짐
+                        //isCollapsed: true,
+
+                        //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 5,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: Colors.brown,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-        ],
+
+          ],
+        ),
       ),
     );
   }
