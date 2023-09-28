@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
 class WriteDiaryScreen extends StatefulWidget {
   const WriteDiaryScreen({super.key});
 
@@ -101,10 +104,15 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   }
 
   //내용 부분 컨트롤러
-  final TextEditingController _ContentTextEditingController = TextEditingController();
+  final TextEditingController _ContentTextEditingController =
+      TextEditingController();
 
   //메모 부분 컨트롤러
-  final TextEditingController _MemoTextEditingController = TextEditingController();
+  final TextEditingController _MemoTextEditingController =
+      TextEditingController();
+
+  final ImagePicker picker = ImagePicker();
+  XFile? _image; // 카메라로 촬영한 이미지를 저장할 변수
 
   @override
   void initState() {
@@ -492,16 +500,42 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                         labelStyle: TextStyle(color: Colors.brown.shade200),
 
                         //오른쪽 아이콘
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                          },
-                          child: Icon(
-                            Icons.camera_alt,
-                          ),
-                        ),
+                        //갤러리나 카메라에서 사진 업로드 하는 부분
+                        suffixIcon: PopupMenuButton<MenuType>(
+                          icon: Icon(Icons.camera_alt),
+                          onSelected: (MenuType result) async {
+                            //image를 가져와서 images에 저장
+                            //카메라 클릭 시 작동
+                            if (result.englishName == 'camera') {
+                              final XFile? pickedFile = await picker.pickImage(
+                                  source: ImageSource.camera);
+                              if (pickedFile != null) {
+                                setState(() {
+                                  _image = XFile(pickedFile.path);
+                                });
+                              }
+                            }
 
-                        //텍스트 필드 내에 여백이 싹 사라짐
-                        //isCollapsed: true,
+                            //갤러리 클릭 시 작동
+                            if (result.englishName == 'gallery') {
+                              final XFile? pickedFile = await picker.pickImage(
+                                  source: ImageSource.gallery);
+                              if (pickedFile != null) {
+                                setState(() {
+                                  _image = XFile(pickedFile.path);
+                                });
+                              }
+                            }
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              for (final value in MenuType.values)
+                                PopupMenuItem(
+                                    value: value,
+                                    child: Text(value.koreanName)),
+                            ];
+                          },
+                        ),
 
                         //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
                         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -521,10 +555,40 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
               ),
             ),
 
+            //사진 보여주는 부분
+            Container(
+              child: _buildPhotoArea(),
+            ),
 
+            //화면 끝에 안 닿게 만들기 위한 공간
+            SizedBox(
+              height: 40,
+            ),
           ],
         ),
       ),
     );
   }
+
+  //사진 보여주는 영역
+  Widget _buildPhotoArea() {
+    return _image != null
+        ? SizedBox(
+            width: 300,
+            height: 300,
+            child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드
+          )
+        : SizedBox();
+  }
+}
+
+//카메라 아이콘 클릭 시 카메라로 사진을 찍을 건지 갤러리에서 선택할건지 목록
+enum MenuType {
+  camera('camera', '카메라'),
+  gallery('gallery', '갤러리');
+
+  const MenuType(this.englishName, this.koreanName);
+
+  final String englishName;
+  final String koreanName;
 }
