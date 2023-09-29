@@ -564,6 +564,9 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
             SizedBox(
               height: 40,
             ),
+
+            
+
           ],
         ),
       ),
