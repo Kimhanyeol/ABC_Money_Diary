@@ -1,11 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+//신규 가계부 작성하는 화면
 
 import 'dart:io';
+
+import 'package:abc_money_diary/models/diary_model.dart';
+import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
+import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+
+
 
 class WriteDiaryScreen extends StatefulWidget {
   const WriteDiaryScreen({super.key});
@@ -15,11 +22,63 @@ class WriteDiaryScreen extends StatefulWidget {
 }
 
 class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
+
+  void deleteDiary() async {
+    SqlDiaryCrudRepository.deleteAll();
+    Navigator.pop(context);
+    update();
+  }
+
+  void update() => setState(() {});
+
+  //저장버튼 누르면 작동하는 곳
+  void onTapSaveButton() async {
+
+    var diary = Diary(
+      type: ABC ?? '',
+      date: getToday() ?? '',
+      time: getTimeNow() ?? '',
+      money: _MoneyTextEditingController.text ?? '',
+      contents: _ContentTextEditingController.text ?? '',
+      category: _CategoryTextEditingController.text ?? '',
+      memo: _MemoTextEditingController.text ?? '',
+    );
+
+    Navigator.pop(context);
+    await SqlDiaryCrudRepository.create(diary);
+    update();
+  }
+
   // ABC 선택 관련 변수
+  String ABC = '';
   bool aButton = false;
   bool bButton = false;
   bool cButton = false;
   late List<bool> isSelected;
+
+  //ABC 버튼 선택
+  void onTapToggleButton(index) {
+    if (index == 0) {
+      aButton = true;
+      bButton = false;
+      cButton = false;
+      ABC = 'A';
+    } else if (index == 1) {
+      aButton = false;
+      bButton = true;
+      cButton = false;
+      ABC = 'B';
+    }
+    if (index == 2) {
+      aButton = false;
+      bButton = false;
+      cButton = true;
+      ABC = 'C';
+    }
+    setState(() {
+      isSelected = [aButton, bButton, cButton];
+    });
+  }
 
   //날짜 선택 관련 변수
   String selectedDate = "";
@@ -70,10 +129,16 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   String getTimeNow() {
     if (selectedTime == "") {
       DateTime now = DateTime.now();
-      DateFormat formatter = DateFormat('a HH:mm', 'ko');
+      DateFormat formatter;
+      if(now.hour<12){
+        formatter = DateFormat('a h:mm', 'ko');
+      }else{
+        formatter = DateFormat('a h:mm', 'ko');
+      }
       String NowTime = formatter.format(now);
       return NowTime;
     }
+
     return selectedTime;
   }
 
@@ -103,6 +168,14 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     }
   }
 
+  //분류 부분 컨트롤러
+  final TextEditingController _CategoryTextEditingController =
+      TextEditingController();
+
+  //금액 부분 컨트롤러
+  final TextEditingController _MoneyTextEditingController =
+      TextEditingController();
+
   //내용 부분 컨트롤러
   final TextEditingController _ContentTextEditingController =
       TextEditingController();
@@ -118,27 +191,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   void initState() {
     isSelected = [aButton, bButton, cButton];
     super.initState();
-  }
-
-  //ABC 버튼 선택
-  void onTapToggleButton(index) {
-    if (index == 0) {
-      aButton = true;
-      bButton = false;
-      cButton = false;
-    } else if (index == 1) {
-      aButton = false;
-      bButton = true;
-      cButton = false;
-    }
-    if (index == 2) {
-      aButton = false;
-      bButton = false;
-      cButton = true;
-    }
-    setState(() {
-      isSelected = [aButton, bButton, cButton];
-    });
   }
 
   @override
@@ -325,15 +377,13 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                   ),
                   Flexible(
                     child: TextField(
+                      controller: _CategoryTextEditingController,
                       decoration: InputDecoration(
                         labelText: '분류를 입력하세요',
                         hintText: 'ex) 식비, 교통비...',
                         alignLabelWithHint: true,
                         labelStyle: TextStyle(color: Colors.brown.shade200),
                         hintStyle: TextStyle(color: Colors.brown.shade200),
-
-                        //텍스트 필드 내에 여백이 싹 사라짐
-                        //isCollapsed: true,
 
                         //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
                         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -379,6 +429,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                   ),
                   Flexible(
                     child: TextField(
+                      controller: _MoneyTextEditingController,
                       keyboardType: TextInputType.number,
 
                       //키보드에서 숫자 외에 .-/ 이런 거 입력 못하게 막는 코드
@@ -393,8 +444,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                         labelText: '금액을 입력하세요',
                         alignLabelWithHint: true,
                         labelStyle: TextStyle(color: Colors.brown.shade200),
-                        //텍스트 필드 내에 여백이 싹 사라짐
-                        //isCollapsed: true,
 
                         //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
                         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -560,13 +609,54 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
               child: _buildPhotoArea(),
             ),
 
-            //화면 끝에 안 닿게 만들기 위한 공간
-            SizedBox(
-              height: 40,
+            //저장버튼
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: ElevatedButton(
+                onPressed: () => onTapSaveButton(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                child: Text(
+                  '저장하기',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
 
-            
+            //임시 삭제버튼
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: ElevatedButton(
+                onPressed: deleteDiary,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                child: Text(
+                  '삭제하기',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
 
+            //화면 끝에 안 닿게 만들기 위한 공간
+            SizedBox(
+              height: 60,
+            ),
           ],
         ),
       ),
@@ -576,7 +666,8 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   //사진 보여주는 영역
   Widget _buildPhotoArea() {
     return _image != null
-        ? SizedBox(
+        ? Container(
+            color: Colors.grey,
             width: 300,
             height: 300,
             child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드

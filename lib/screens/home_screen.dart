@@ -1,10 +1,10 @@
 import 'package:abc_money_diary/bars/main_appbar.dart';
 import 'package:abc_money_diary/screens/calendar_screen.dart';
-import 'package:abc_money_diary/screens/diary_screen.dart';
+import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
 import 'package:abc_money_diary/screens/etc_screen.dart';
 import 'package:abc_money_diary/screens/statistics_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:abc_money_diary/screens/write_diary_screen.dart';
+import 'package:abc_money_diary/screens/diary_directory/write_diary_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -13,24 +13,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-List body_item = [
-  DiaryScreen(),
-  CalendarScreen(),
-  StatisticScreen(),
-  EtcScreen(),
-];
-
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
-
-  Future _onTapWriteDiaryButton() {
-    return Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => WriteDiaryScreen(),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
       body:Center(
         child: body_item.elementAt(selectedIndex),
-      ),
-
-      //가계부 작성화면으로 이동하는 플로팅버튼 부분
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onTapWriteDiaryButton,
-        backgroundColor: Colors.orange,
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 40,
-        ),
       ),
 
       bottomNavigationBar: BottomNavigationBar(
@@ -86,3 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+List body_item = [
+  DiaryScreen(),
+  CalendarScreen(),
+  StatisticScreen(),
+  EtcScreen(),
+];

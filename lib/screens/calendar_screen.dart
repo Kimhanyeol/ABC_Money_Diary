@@ -19,6 +19,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   DateTime focusedDay = DateTime.now();
 
+  //마크 표시 기능이 되는지 확인하기 위한 임의값, 나중에 지우고 db 받아와야댐
   Map<DateTime, List<Event>> events = {
     DateTime.utc(2023,09,13) : [ Event('title'), Event('title2') ],
     DateTime.utc(2023,09,14) : [ Event('title3') ],
