@@ -50,7 +50,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   }
 
   // ABC 선택 관련 변수
-  String ABC = '';
+  String ABC = 'C';
   bool aButton = false;
   bool bButton = false;
   bool cButton = false;
@@ -131,9 +131,9 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       DateTime now = DateTime.now();
       DateFormat formatter;
       if(now.hour<12){
-        formatter = DateFormat('a h:mm', 'ko');
+        formatter = DateFormat('a HH:mm', 'ko');
       }else{
-        formatter = DateFormat('a h:mm', 'ko');
+        formatter = DateFormat('a HH:mm', 'ko');
       }
       String NowTime = formatter.format(now);
       return NowTime;
@@ -160,9 +160,19 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     if (selected != null) {
       setState(() {
         if (selected.hour < 12) {
-          selectedTime = '오전 ${selected.hourOfPeriod}:${selected.minute}';
-        } else {
-          selectedTime = '오후 ${selected.hourOfPeriod}:${selected.minute}';
+          if(selected.minute<10) {
+            selectedTime = '오전 ${selected.hour}:0${selected.minute}';
+          } else {
+            selectedTime = '오전 ${selected.hour}:${selected.minute}';
+          }
+        }
+
+        else {
+          if(selected.minute<10) {
+            selectedTime = '오전 ${selected.hour}:0${selected.minute}';
+          } else {
+            selectedTime = '오후 ${selected.hour}:${selected.minute}';
+          }
         }
       });
     }

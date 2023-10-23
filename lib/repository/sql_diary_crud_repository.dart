@@ -25,6 +25,7 @@ class SqlDiaryCrudRepository {
         DiaryFields.contents,
         DiaryFields.memo,
       ],
+      orderBy: DiaryFields.time,
     );
 
     return result.map(
@@ -64,7 +65,7 @@ class SqlDiaryCrudRepository {
       return null;
     }
   }
-
+  
   static Future<int> update(Diary diary) async {
     var db = await SqlDataBase().database;
     return await db.update(
@@ -73,6 +74,11 @@ class SqlDiaryCrudRepository {
       where: '${DiaryFields.id}=?',
       whereArgs: [diary.id],
     );
+  }
+
+  static Future getABC(String abc) async {
+    var db = await SqlDataBase().database;
+    return await db.rawQuery("select sum(${DiaryFields.money}) from ${Diary.tableName} group by type");
   }
 
   static Future<int> delete(int id) async {
@@ -90,4 +96,5 @@ class SqlDiaryCrudRepository {
       Diary.tableName,
     );
   }
+
 }
