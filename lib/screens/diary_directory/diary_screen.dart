@@ -19,132 +19,28 @@ class _DiaryScreenState extends State<DiaryScreen> {
 
   void update() => setState(() {});
 
+  //하단에 + 버튼 클릭시 이벤트
   Future _onTapWriteDiaryButton() {
-    return Navigator.push(
-        context,
-        PageRouteBuilder(
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              //상하좌우 어디서 나오는지 고르는거
-              var begin = const Offset(0.0, 1.0);
-              var end = Offset.zero;
-              var curve = Curves.linear;
-              var tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              return SlideTransition(
-                position: animation.drive(tween),
-                child: child,
-              );
-            },
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                WriteDiaryScreen())).then((value) => update());
-  }
-
-  //가계부 목록 ui 부분
-  Widget dayDiaryScreenSmall(Diary diary) {
-    return GestureDetector(
-      //가계부 목록 클릭시 상세내용 보여주는 위젯
-      onTap: () async {
-        return showDialog(
-          context: context,
-          builder: (context) {
-            var data = diary;
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20)
-              ),
-
-              content: SizedBox(
-                height: 400,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      '${data.type} 타입',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      '금액 : ${data.money}',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      '날짜 : ${data.date}',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      '시간 : ${data.time}',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      '분류 : ${data.category}',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    Text(
-                      '내용 : ${data.contents}',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      '메모 : ${data.memo}',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(), child: Text('수정하기')),
-                ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(), child: Text('삭제하기')),
-              ],
-            );
-          },
+    //바텀시트 상세설정은 메인화면에 theme에서 설정했음
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 600,
+          child: WriteDiaryScreen(),
         );
       },
-      //가계부 목록들
-      child: DayDiaryWidet(diary: diary,),
-    );
+      backgroundColor: Colors.white,
+      isScrollControlled: true,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    ).then((value) => update());
   }
 
+  //가계부 목록 가져오기
   Future<List<Diary>> _loadDiaryList() async {
     return await SqlDiaryCrudRepository.getList();
   }
-
-  void getABC(String abc) {}
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +79,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w500),
                         ),
-                        Text('- 8000',
+                        Text('- 8,000',
                             style: TextStyle(
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w600,
@@ -207,7 +103,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w500),
                         ),
-                        Text('- 22000',
+                        Text('- 22,000',
                             style: TextStyle(
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w600,
@@ -231,7 +127,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w500),
                         ),
-                        Text('- 50000',
+                        Text('- 50,000',
                             style: TextStyle(
                               fontFamily: "Yeongdeok-Sea",
                               color: Colors.red,
@@ -245,6 +141,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
             ),
           ),
 
+          //가계부 리스트들
           Expanded(
             child: FutureBuilder<List<Diary>>(
               future: _loadDiaryList(),
@@ -261,7 +158,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                     groupBy: (element) => element.date,
                     order: GroupedListOrder.DESC,
                     itemBuilder: (context, element) =>
-                        dayDiaryScreenSmall(element),
+                        DayDiaryWidget(diary: element),
                     //그룹 헤더 디자인부분
                     groupSeparatorBuilder: (value) {
                       return Padding(

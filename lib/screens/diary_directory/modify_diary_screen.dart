@@ -1,34 +1,32 @@
-//신규 가계부 작성하는 화면
+//가계부 수정하는 화면
 
 import 'dart:io';
 
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
+import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
+import 'package:abc_money_diary/screens/home_screen.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+class ModifyDiaryScreen extends StatefulWidget {
+  final Diary diary;
 
-
-class WriteDiaryScreen extends StatefulWidget {
-
-  const WriteDiaryScreen({super.key});
+  const ModifyDiaryScreen({super.key, required this.diary});
 
   @override
-  State<WriteDiaryScreen> createState() => _WriteDiaryScreenState();
+  State<ModifyDiaryScreen> createState() => _ModifyDiaryScreenState();
 }
 
-class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
-
+class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
   void update() => setState(() {});
 
-  //저장버튼 누르면 작동하는 곳
-  void onTapSaveButton() async {
-
-    var diary = Diary(
+  //수정버튼 누르면 작동하는 곳
+  void onTapModifyButton(Diary diary) async {
+    var modifyDiary = diary.clone(
       type: ABC,
       date: getToday(),
       time: getTimeNow(),
@@ -37,10 +35,10 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       category: _CategoryTextEditingController.text,
       memo: _MemoTextEditingController.text,
     );
-
-    Navigator.pop(context);
-    await SqlDiaryCrudRepository.create(diary);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false);
+    await SqlDiaryCrudRepository.update(modifyDiary);
     update();
+
   }
 
   // ABC 선택 관련 변수
@@ -124,9 +122,9 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     if (selectedTime == "") {
       DateTime now = DateTime.now();
       DateFormat formatter;
-      if(now.hour<12){
+      if (now.hour < 12) {
         formatter = DateFormat('a HH:mm', 'ko');
-      }else{
+      } else {
         formatter = DateFormat('a HH:mm', 'ko');
       }
       String NowTime = formatter.format(now);
@@ -154,15 +152,13 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     if (selected != null) {
       setState(() {
         if (selected.hour < 12) {
-          if(selected.minute<10) {
+          if (selected.minute < 10) {
             selectedTime = '오전 ${selected.hour}:0${selected.minute}';
           } else {
             selectedTime = '오전 ${selected.hour}:${selected.minute}';
           }
-        }
-
-        else {
-          if(selected.minute<10) {
+        } else {
+          if (selected.minute < 10) {
             selectedTime = '오전 ${selected.hour}:0${selected.minute}';
           } else {
             selectedTime = '오후 ${selected.hour}:${selected.minute}';
@@ -439,7 +435,10 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly,
                         CurrencyTextInputFormatter(
-                            locale: 'ko', decimalDigits: 0, symbol: '￦ ',)
+                          locale: 'ko',
+                          decimalDigits: 0,
+                          symbol: '￦ ',
+                        )
                       ],
 
                       decoration: InputDecoration(
@@ -529,7 +528,11 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
             ),
 
             //필수 항목과 선택 항목 구분선
-            Divider(height: 10,color: Colors.grey.shade300,thickness: 5,),
+            Divider(
+              height: 10,
+              color: Colors.grey.shade300,
+              thickness: 5,
+            ),
 
             //메모 입력하는 부분
             Container(
@@ -608,11 +611,11 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
               child: _buildPhotoArea(),
             ),
 
-            //저장버튼
+            //수정버튼
             Padding(
               padding: const EdgeInsets.all(15),
               child: ElevatedButton(
-                onPressed: () => onTapSaveButton(),
+                onPressed: () => onTapModifyButton(widget.diary),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   minimumSize: Size(double.infinity, 50),
@@ -620,7 +623,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
                 child: Text(
-                  '저장하기',
+                  '수정하기',
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w600,

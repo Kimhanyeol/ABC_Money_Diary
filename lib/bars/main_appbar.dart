@@ -27,7 +27,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       //앱 바 밑에 음영 사라지게 만드는 코드
       elevation: 2,
       title: Text(
-        'ABC 가계부',
+        '< 2023 년 10 월 >',
         style: TextStyle(
           fontSize: 25,
           fontWeight: FontWeight.w600,
