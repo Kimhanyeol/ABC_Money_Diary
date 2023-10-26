@@ -16,6 +16,9 @@ class DiaryScreen extends StatefulWidget {
 }
 
 class _DiaryScreenState extends State<DiaryScreen> {
+  late String A;
+  late String B;
+  late String C;
 
   void update() => setState(() {});
 
@@ -26,7 +29,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
       context: context,
       builder: (context) {
         return SizedBox(
-          height: 600,
+          height: 635,
           child: WriteDiaryScreen(),
         );
       },
@@ -37,9 +40,9 @@ class _DiaryScreenState extends State<DiaryScreen> {
     ).then((value) => update());
   }
 
-  //가계부 목록 가져오기
+  //한달치 가계부 목록 가져오기
   Future<List<Diary>> _loadDiaryList() async {
-    return await SqlDiaryCrudRepository.getList();
+    return await SqlDiaryCrudRepository.getMonthList();
   }
 
   @override
@@ -79,7 +82,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w500),
                         ),
-                        Text('- 8,000',
+                        Text('-8000',
                             style: TextStyle(
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w600,
@@ -157,8 +160,9 @@ class _DiaryScreenState extends State<DiaryScreen> {
                     elements: datas!,
                     groupBy: (element) => element.date,
                     order: GroupedListOrder.DESC,
-                    itemBuilder: (context, element) =>
-                        DayDiaryWidget(diary: element),
+                    itemBuilder: (context, element) {
+                      return DayDiaryWidget(diary: element);
+                    },
                     //그룹 헤더 디자인부분
                     groupSeparatorBuilder: (value) {
                       return Padding(

@@ -30,7 +30,7 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
       context: context,
       builder: (context) {
         return SizedBox(
-          height: 600,
+          height: 635,
           child: ModifyDiaryScreen(diary: widget.diary),
         );
       },
@@ -95,7 +95,7 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              '금액 : ${widget.diary.money}',
+              '금액 : ${widget.diary.money} 원',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,

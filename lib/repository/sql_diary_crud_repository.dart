@@ -35,6 +35,22 @@ class SqlDiaryCrudRepository {
     ).toList();
   }
 
+  //한 달치 가계부 불러오기
+  static Future<List<Diary>> getMonthList() async {
+    var db = await SqlDataBase().database;
+    var result = await db.rawQuery(
+        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('now','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('now','start of month','+1 month','-1 day','localtime') ORDER BY ${DiaryFields.time} ;",
+        null
+    );
+
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
+  }
+
   //가계부 한 개를 선택해서 불러오기
   static Future<Diary?> getDiaryOne(int id) async {
     var db = await SqlDataBase().database;
@@ -74,11 +90,6 @@ class SqlDiaryCrudRepository {
       where: '${DiaryFields.id}=?',
       whereArgs: [diary.id],
     );
-  }
-
-  static Future getABC(String abc) async {
-    var db = await SqlDataBase().database;
-    return await db.rawQuery("select sum(${DiaryFields.money}) from ${Diary.tableName} group by type");
   }
 
   static Future<int> delete(int id) async {

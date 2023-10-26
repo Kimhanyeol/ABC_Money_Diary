@@ -1,5 +1,6 @@
 //가계부 상세내용 보여주는 위젯
 
+import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../models/diary_model.dart';
@@ -77,7 +78,7 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
                           fontFamily: "Yeongdeok-Sea",
                         )),
                   if (widget.diary.type == 'C')
-                    Text('C항목 ${widget.diary.money}',
+                    Text('C항목 ￦ ${widget.diary.money}',
                         style: TextStyle(
                           fontSize: 15,
                           fontFamily: "Yeongdeok-Sea",
@@ -102,7 +103,7 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
                     Text(widget.diary.type!),
                     Text(widget.diary.time!),
                     Text(widget.diary.category!),
-                    Text(widget.diary.money!),
+                    Text('￦ ${widget.diary.money!}'),
                   ],
                 ),
               ),

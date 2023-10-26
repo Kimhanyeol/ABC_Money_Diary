@@ -11,7 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-
+import '../../widgets/custom_button.dart';
+import '../../widgets/money_text_field_widget.dart';
 
 class WriteDiaryScreen extends StatefulWidget {
 
@@ -132,7 +133,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       String NowTime = formatter.format(now);
       return NowTime;
     }
-
     return selectedTime;
   }
 
@@ -153,17 +153,30 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
 
     if (selected != null) {
       setState(() {
-        if (selected.hour < 12) {
-          if(selected.minute<10) {
+        if (selected.hour < 12 && selected.hour >= 10) {
+          if (selected.minute < 10) {
             selectedTime = '오전 ${selected.hour}:0${selected.minute}';
           } else {
             selectedTime = '오전 ${selected.hour}:${selected.minute}';
           }
         }
-
+        else if(selected.hour < 10){
+          if (selected.minute < 10) {
+            selectedTime = '오전 0${selected.hour}:0${selected.minute}';
+          } else {
+            selectedTime = '오전 0${selected.hour}:${selected.minute}';
+          }
+        }
+        else if(selected.hour == 0){
+          if (selected.minute < 10) {
+            selectedTime = '오전 0${selected.hour}:0${selected.minute}';
+          } else {
+            selectedTime = '오전 0${selected.hour}:${selected.minute}';
+          }
+        }
         else {
           if(selected.minute<10) {
-            selectedTime = '오전 ${selected.hour}:0${selected.minute}';
+            selectedTime = '오후 ${selected.hour}:0${selected.minute}';
           } else {
             selectedTime = '오후 ${selected.hour}:${selected.minute}';
           }
@@ -180,6 +193,9 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   final TextEditingController _MoneyTextEditingController =
       TextEditingController();
 
+  //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
+  String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
+
   //내용 부분 컨트롤러
   final TextEditingController _ContentTextEditingController =
       TextEditingController();
@@ -191,10 +207,47 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   final ImagePicker picker = ImagePicker();
   XFile? _image; // 카메라로 촬영한 이미지를 저장할 변수
 
+  bool isMoneyFocused = false;
+  FocusNode focusNode = FocusNode();
+
+  void addMoney(int addVal){
+    if( _MoneyTextEditingController.text == "" ) _MoneyTextEditingController.text = moneyToString(addVal);
+    else{
+      int newVal = int.parse(_MoneyTextEditingController.text.replaceAll(',', '')) + addVal;
+      _MoneyTextEditingController.text = moneyToString(newVal);
+    }
+  }
+
+  Widget makeButtons(){
+    return isMoneyFocused
+        ? Column(
+      children: [
+        const SizedBox(height: 10,),
+        Row(
+          children: [
+            CustomButton( onTap: () { addMoney(1000); }, text: "+1천",),
+            CustomButton( onTap: () { addMoney(5000); }, text: "+5천",),
+            CustomButton( onTap: () { addMoney(10000); }, text: "+1만",),
+            CustomButton( onTap: () { addMoney(50000); }, text: "+5만",),
+            CustomButton( onTap: () { addMoney(100000); }, text: "+10만",),
+          ],
+        )
+      ],
+    )
+        : const SizedBox.shrink();
+  }
+
   @override
   void initState() {
     isSelected = [aButton, bButton, cButton];
     super.initState();
+
+    focusNode.addListener(() {
+      setState(() {
+        isMoneyFocused = focusNode.hasFocus;
+      });
+    });
+
   }
 
   @override
@@ -353,10 +406,51 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
               ),
             ),
 
+            //금액 입력하는 부분
+            AnimatedContainer(
+              alignment: Alignment.center,
+              margin: EdgeInsets.fromLTRB(20, 5, 20, 10),
+              height: isMoneyFocused ? 100 : 50,
+              duration: const Duration(milliseconds: 300),
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          child: Row(
+                            children: [
+                              Text(
+                                '금액',
+                                style: TextStyle(
+                                  fontFamily: "HakgyoansimWoojuR",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 25,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: MoneyTextField(controller: _MoneyTextEditingController,focusNode: focusNode),
+                        ),
+                      ],
+                    ),
+                    makeButtons(),
+                  ],
+                ),
+              ),
+            ),
+
             //분류 선택하는 부분
             Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.fromLTRB(20, 5, 20, 10),
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -386,66 +480,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                         alignLabelWithHint: true,
                         labelStyle: TextStyle(color: Colors.brown.shade200),
                         hintStyle: TextStyle(color: Colors.brown.shade200),
-
-                        //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 0,
-                          horizontal: 5,
-                        ),
-                      ),
-                      style: TextStyle(
-                        color: Colors.brown,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            //금액 입력하는 부분
-            Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    child: Row(
-                      children: [
-                        Text(
-                          '금액',
-                          style: TextStyle(
-                            fontFamily: "HakgyoansimWoojuR",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 25,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                        Icon(Icons.chevron_right_rounded, color: Colors.grey),
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                    child: TextField(
-                      controller: _MoneyTextEditingController,
-                      keyboardType: TextInputType.number,
-
-                      //키보드에서 숫자 외에 .-/ 이런 거 입력 못하게 막는 코드
-                      //3자리마다 , 찍어주고 ￦표시 띄워주는 코드
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                        CurrencyTextInputFormatter(
-                            locale: 'ko', decimalDigits: 0, symbol: '￦ ',)
-                      ],
-
-                      decoration: InputDecoration(
-                        labelText: '금액을 입력하세요',
-                        alignLabelWithHint: true,
-                        labelStyle: TextStyle(color: Colors.brown.shade200),
 
                         //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
                         floatingLabelBehavior: FloatingLabelBehavior.never,
