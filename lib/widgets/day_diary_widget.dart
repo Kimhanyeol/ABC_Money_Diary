@@ -1,6 +1,5 @@
 //가계부 상세내용 보여주는 위젯
 
-import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../models/diary_model.dart';
@@ -9,14 +8,13 @@ import 'day_diary_detail_widget.dart';
 class DayDiaryWidget extends StatefulWidget {
   final Diary diary;
 
-  const DayDiaryWidget({super.key, required this.diary});
+  const DayDiaryWidget({super.key, required this.diary,});
 
   @override
   State<DayDiaryWidget> createState() => _DayDiaryWidgetState();
 }
 
 class _DayDiaryWidgetState extends State<DayDiaryWidget> {
-  void update() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +101,7 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
                     Text(widget.diary.type!),
                     Text(widget.diary.time!),
                     Text(widget.diary.category!),
-                    Text('￦ ${widget.diary.money!}'),
+                    Text('￦ ${widget.diary.money}'),
                   ],
                 ),
               ),
@@ -113,4 +111,6 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
       ),
     );
   }
+
+  void update() => setState(() {});
 }

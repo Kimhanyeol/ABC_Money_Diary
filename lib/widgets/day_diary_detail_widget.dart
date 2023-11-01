@@ -1,6 +1,5 @@
 //날짜별 가계부 목록 작게 보여주는 것들
 
-import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
 import 'package:abc_money_diary/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +30,9 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
       builder: (context) {
         return SizedBox(
           height: 635,
-          child: ModifyDiaryScreen(diary: widget.diary),
+          child: ModifyDiaryScreen(
+            diary: widget.diary,
+          ),
         );
       },
       backgroundColor: Colors.white,

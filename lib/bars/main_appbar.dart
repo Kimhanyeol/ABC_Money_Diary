@@ -14,9 +14,11 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       //스테이터스바 투명하게 만드는 부분
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
+        statusBarColor: Colors.orange,
+        statusBarIconBrightness: Brightness.light,
+
         systemNavigationBarColor: Colors.orange,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.light,
       ),
       //앱바 높이
       toolbarHeight: 70,
@@ -30,7 +32,6 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         '< 2023 년 10 월 >',
         style: TextStyle(
           fontSize: 25,
-          fontWeight: FontWeight.w600,
           color: Colors.white,
           fontFamily: "Yeongdeok-Sea",
         ),
@@ -39,7 +40,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           onPressed: null,
           icon: Icon(
-            Icons.question_answer,
+            Icons.question_answer_outlined,
             size: 30,
             color: Colors.white,
           ),
@@ -48,7 +49,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.symmetric(horizontal: 20),
           onPressed: null,
           icon: Icon(
-            Icons.help,
+            Icons.help_outline,
             size: 30,
             color: Colors.white,
           ),

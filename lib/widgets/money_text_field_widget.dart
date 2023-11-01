@@ -18,13 +18,10 @@ class MoneyTextField extends StatelessWidget {
       focusNode: focusNode,
 
       //키보드에서 숫자 외에 .-/ 이런 거 입력 못하게 막는 코드
-      //3자리마다 , 찍어주고 ￦표시 띄워주는 코드
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly,
-      ],
+      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly,],
 
       onChanged: (string) {
-        if( string.isEmpty ) return ;
+        if(string.isEmpty) return ;
         string = moneyToString(int.parse(string.replaceAll(',', '')));
         controller.value = TextEditingValue(
           text: string,
@@ -36,7 +33,7 @@ class MoneyTextField extends StatelessWidget {
         labelText: '금액을 입력하세요',
         alignLabelWithHint: true,
         labelStyle: TextStyle(color: Colors.brown.shade200),
-        suffixText: "\₩",
+        suffixText: "₩",
 
         //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
         floatingLabelBehavior: FloatingLabelBehavior.never,

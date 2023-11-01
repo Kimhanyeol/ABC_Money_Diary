@@ -4,10 +4,8 @@ import 'dart:io';
 
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -15,8 +13,9 @@ import '../../widgets/custom_button.dart';
 import '../../widgets/money_text_field_widget.dart';
 
 class WriteDiaryScreen extends StatefulWidget {
+  final DateTime? preDate;
 
-  const WriteDiaryScreen({super.key});
+  const WriteDiaryScreen({super.key, this.preDate,});
 
   @override
   State<WriteDiaryScreen> createState() => _WriteDiaryScreenState();
@@ -30,13 +29,13 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   void onTapSaveButton() async {
 
     var diary = Diary(
-      type: ABC,
+      type: abc,
       date: getToday(),
       time: getTimeNow(),
-      money: _MoneyTextEditingController.text,
-      contents: _ContentTextEditingController.text,
-      category: _CategoryTextEditingController.text,
-      memo: _MemoTextEditingController.text,
+      money: _moneyTextEditingController.text,
+      contents: _contentTextEditingController.text,
+      category: _categoryTextEditingController.text,
+      memo: _memoTextEditingController.text,
     );
 
     Navigator.pop(context);
@@ -45,7 +44,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   }
 
   // ABC 선택 관련 변수
-  String ABC = 'C'; //일단 기본적으로 모든 소비는 불필요하다는 느낌을 주기 위해 디폴트값은 C로 설정
+  String abc = 'C'; //일단 기본적으로 모든 소비는 불필요하다는 느낌을 주기 위해 디폴트값은 C로 설정
   bool aButton = false;
   bool bButton = false;
   bool cButton = false;
@@ -57,18 +56,18 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       aButton = true;
       bButton = false;
       cButton = false;
-      ABC = 'A';
+      abc = 'A';
     } else if (index == 1) {
       aButton = false;
       bButton = true;
       cButton = false;
-      ABC = 'B';
+      abc = 'B';
     }
     if (index == 2) {
       aButton = false;
       bButton = false;
       cButton = true;
-      ABC = 'C';
+      abc = 'C';
     }
     setState(() {
       isSelected = [aButton, bButton, cButton];
@@ -81,10 +80,15 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   // 기본 오늘 날짜 구하는 곳
   String getToday() {
     if (selectedDate == "") {
+      if(widget.preDate!=null){
+        DateFormat formatter = DateFormat('yyyy-MM-dd (E)', 'ko');
+        String today = formatter.format(widget.preDate!);
+        return today;
+      }
       DateTime now = DateTime.now();
       DateFormat formatter = DateFormat('yyyy-MM-dd (E)', 'ko');
-      String Today = formatter.format(now);
-      return Today;
+      String today = formatter.format(now);
+      return today;
     }
     return selectedDate;
   }
@@ -130,8 +134,8 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       }else{
         formatter = DateFormat('a HH:mm', 'ko');
       }
-      String NowTime = formatter.format(now);
-      return NowTime;
+      String nowTime = formatter.format(now);
+      return nowTime;
     }
     return selectedTime;
   }
@@ -186,22 +190,22 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   }
 
   //분류 부분 컨트롤러
-  final TextEditingController _CategoryTextEditingController =
+  final TextEditingController _categoryTextEditingController =
       TextEditingController();
 
   //금액 부분 컨트롤러
-  final TextEditingController _MoneyTextEditingController =
+  final TextEditingController _moneyTextEditingController =
       TextEditingController();
 
   //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
   String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
 
   //내용 부분 컨트롤러
-  final TextEditingController _ContentTextEditingController =
+  final TextEditingController _contentTextEditingController =
       TextEditingController();
 
   //메모 부분 컨트롤러
-  final TextEditingController _MemoTextEditingController =
+  final TextEditingController _memoTextEditingController =
       TextEditingController();
 
   final ImagePicker picker = ImagePicker();
@@ -211,31 +215,14 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   FocusNode focusNode = FocusNode();
 
   void addMoney(int addVal){
-    if( _MoneyTextEditingController.text == "" ) _MoneyTextEditingController.text = moneyToString(addVal);
-    else{
-      int newVal = int.parse(_MoneyTextEditingController.text.replaceAll(',', '')) + addVal;
-      _MoneyTextEditingController.text = moneyToString(newVal);
+    if( _moneyTextEditingController.text == "" ) {
+      _moneyTextEditingController.text = moneyToString(addVal);
+    } else{
+      int newVal = int.parse(_moneyTextEditingController.text.replaceAll(',', '')) + addVal;
+      _moneyTextEditingController.text = moneyToString(newVal);
     }
   }
 
-  Widget makeButtons(){
-    return isMoneyFocused
-        ? Column(
-      children: [
-        const SizedBox(height: 10,),
-        Row(
-          children: [
-            CustomButton( onTap: () { addMoney(1000); }, text: "+1천",),
-            CustomButton( onTap: () { addMoney(5000); }, text: "+5천",),
-            CustomButton( onTap: () { addMoney(10000); }, text: "+1만",),
-            CustomButton( onTap: () { addMoney(50000); }, text: "+5만",),
-            CustomButton( onTap: () { addMoney(100000); }, text: "+10만",),
-          ],
-        )
-      ],
-    )
-        : const SizedBox.shrink();
-  }
 
   @override
   void initState() {
@@ -437,7 +424,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                           ),
                         ),
                         Expanded(
-                          child: MoneyTextField(controller: _MoneyTextEditingController,focusNode: focusNode),
+                          child: MoneyTextField(controller: _moneyTextEditingController,focusNode: focusNode),
                         ),
                       ],
                     ),
@@ -473,7 +460,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                   ),
                   Flexible(
                     child: TextField(
-                      controller: _CategoryTextEditingController,
+                      controller: _categoryTextEditingController,
                       decoration: InputDecoration(
                         labelText: '분류를 입력하세요',
                         hintText: 'ex) 식비, 교통비...',
@@ -525,7 +512,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                   ),
                   Flexible(
                     child: TextField(
-                      controller: _ContentTextEditingController,
+                      controller: _contentTextEditingController,
                       decoration: InputDecoration(
                         labelText: '내용을 입력하세요',
                         hintText: 'ex) 점심 값, 군것질...',
@@ -535,7 +522,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
 
                         //한 번에 내용 삭제 하는 아이콘(suffixIcon이 오른쪽)
                         suffixIcon: GestureDetector(
-                          onTap: () => _ContentTextEditingController.clear(),
+                          onTap: () => _contentTextEditingController.clear(),
                           child: Icon(
                             Icons.cancel,
                           ),
@@ -563,7 +550,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
             ),
 
             //필수 항목과 선택 항목 구분선
-            Divider(height: 10,color: Colors.grey.shade300,thickness: 5,),
+            Divider(height: 10,color: Colors.grey.shade300,thickness: 5),
 
             //메모 입력하는 부분
             Container(
@@ -575,7 +562,8 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                 children: [
                   Flexible(
                     child: TextField(
-                      controller: _MemoTextEditingController,
+                      controller: _memoTextEditingController,
+                      maxLines: null,
                       decoration: InputDecoration(
                         labelText: '메모',
                         alignLabelWithHint: true,
@@ -685,6 +673,28 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
           )
         : SizedBox();
   }
+
+
+  //금액 입력 부분에 천원, 만원, 이런 식으로 클릭해서 입력하는 버튼
+  Widget makeButtons(){
+    return isMoneyFocused
+        ? Column(
+      children: [
+        const SizedBox(height: 10,),
+        Row(
+          children: [
+            CustomButton( onTap: () { addMoney(1000); }, text: "+1천",),
+            CustomButton( onTap: () { addMoney(5000); }, text: "+5천",),
+            CustomButton( onTap: () { addMoney(10000); }, text: "+1만",),
+            CustomButton( onTap: () { addMoney(50000); }, text: "+5만",),
+            CustomButton( onTap: () { addMoney(100000); }, text: "+10만",),
+          ],
+        )
+      ],
+    )
+        : const SizedBox.shrink();
+  }
+
 }
 
 //카메라 아이콘 클릭 시 카메라로 사진을 찍을 건지 갤러리에서 선택할건지 목록

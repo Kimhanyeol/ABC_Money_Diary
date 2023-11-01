@@ -1,6 +1,9 @@
 
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
+
+import 'diary_directory/write_diary_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -10,6 +13,8 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+
+  void update() => setState(() {});
 
   DateTime selectedDay = DateTime(
     DateTime.now().year,
@@ -34,7 +39,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return TableCalendar(
       focusedDay: focusedDay,
-      firstDay: DateTime(2023, 01),
+      firstDay: DateTime(2000, 01),
       lastDay: DateTime.timestamp(),
       locale: 'ko-KR',
       daysOfWeekHeight: 50,
@@ -45,9 +50,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
       //다른 달 날짜 선택시 그 달로 이동
       pageJumpingEnabled: true,
 
+      //화면 꽉 채우기
+      shouldFillViewport: true,
+
       //헤더 스타일
       headerStyle: HeaderStyle(
-        formatButtonVisible: false,
+        formatButtonVisible:false,
         titleCentered: true,
       ),
 
@@ -96,6 +104,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       selectedDayPredicate: (DateTime day) {
         return isSameDay(selectedDay, day);
+      },
+
+      onDayLongPressed: (selectedDay, focusedDay) {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return SizedBox(
+              height: 635,
+              child: WriteDiaryScreen(preDate: selectedDay),
+            );
+          },
+          backgroundColor: Colors.white,
+          isScrollControlled: true,
+          showDragHandle: true,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ).then((value) => update());
       },
 
     );

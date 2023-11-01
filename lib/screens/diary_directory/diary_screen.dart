@@ -1,24 +1,27 @@
 //홈 화면 중 다이어리 칸
 
+
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
 import 'package:abc_money_diary/screens/diary_directory/write_diary_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:intl/intl.dart';
 
 import '../../widgets/day_diary_widget.dart';
 
 class DiaryScreen extends StatefulWidget {
   const DiaryScreen({super.key});
 
+
   @override
   State<DiaryScreen> createState() => _DiaryScreenState();
 }
 
 class _DiaryScreenState extends State<DiaryScreen> {
-  late String A;
-  late String B;
-  late String C;
 
   void update() => setState(() {});
 
@@ -42,7 +45,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
 
   //한달치 가계부 목록 가져오기
   Future<List<Diary>> _loadDiaryList() async {
-    return await SqlDiaryCrudRepository.getMonthList();
+    return await SqlDiaryCrudRepository.getList();
   }
 
   @override
@@ -53,7 +56,6 @@ class _DiaryScreenState extends State<DiaryScreen> {
           // ABC 항목 별 금액 표시해주는 곳
           Container(
             padding: EdgeInsets.all(2),
-
             //ABC 칸 밑에 회색 음영 주는 부분
             decoration: BoxDecoration(
               boxShadow: <BoxShadow>[
@@ -63,6 +65,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                   blurStyle: BlurStyle.outer,
                 ),
               ],
+
             ),
 
             child: Row(
@@ -82,7 +85,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w500),
                         ),
-                        Text('-8000',
+                        Text('A 부분',
                             style: TextStyle(
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w600,
@@ -106,7 +109,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w500),
                         ),
-                        Text('- 22,000',
+                        Text('B 부분',
                             style: TextStyle(
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w600,
@@ -130,7 +133,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w500),
                         ),
-                        Text('- 50,000',
+                        Text('C 부분',
                             style: TextStyle(
                               fontFamily: "Yeongdeok-Sea",
                               color: Colors.red,
@@ -160,9 +163,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                     elements: datas!,
                     groupBy: (element) => element.date,
                     order: GroupedListOrder.DESC,
-                    itemBuilder: (context, element) {
-                      return DayDiaryWidget(diary: element);
-                    },
+                    itemBuilder: (context, element) => DayDiaryWidget(diary: element),
                     //그룹 헤더 디자인부분
                     groupSeparatorBuilder: (value) {
                       return Padding(
@@ -185,7 +186,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
                       );
                     },
                   );
-                } else {
+                }
+                else {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
@@ -199,14 +201,38 @@ class _DiaryScreenState extends State<DiaryScreen> {
       //가계부 작성화면으로 이동하는 플로팅버튼 부분
       floatingActionButton: FloatingActionButton(
         onPressed: _onTapWriteDiaryButton,
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.white,
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: Colors.orange,
           size: 40,
         ),
       ),
     );
   }
+
+  String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
+
+  String addMoney(int addVal, String abc){
+    if( abc == "" ) {
+      abc = moneyToString(addVal);
+    } else{
+      int newVal = int.parse(abc.replaceAll(',', '')) + addVal;
+      abc = moneyToString(newVal);
+    }
+
+    return abc;
+  }
+
+  int moneyToInt(String money){
+    if(money == "") {
+      money = "0";
+    }
+    int result = int.parse(money.replaceAll(',', ''));
+    return result;
+  }
+
+
+
 }
 

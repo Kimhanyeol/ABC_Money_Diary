@@ -4,11 +4,8 @@ import 'dart:io';
 
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
-import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
 import 'package:abc_money_diary/screens/home_screen.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -18,25 +15,52 @@ import '../../widgets/money_text_field_widget.dart';
 class ModifyDiaryScreen extends StatefulWidget {
   final Diary diary;
 
-  const ModifyDiaryScreen({super.key, required this.diary});
+  const ModifyDiaryScreen({super.key, required this.diary, });
 
   @override
   State<ModifyDiaryScreen> createState() => _ModifyDiaryScreenState();
 }
 
 class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
+
+  @override
+  void initState() {
+    isSelected = [aButton, bButton, cButton];
+    super.initState();
+
+    _categoryTextEditingController =
+        TextEditingController(text: widget.diary.category);
+
+    _moneyTextEditingController =
+        TextEditingController(text: widget.diary.money);
+
+    _contentTextEditingController =
+        TextEditingController(text: widget.diary.contents);
+
+    _memoTextEditingController =
+        TextEditingController(text: widget.diary.memo);
+
+    focusNode.addListener(() {
+      setState(() {
+        isMoneyFocused = focusNode.hasFocus;
+      });
+    });
+
+
+  }
+
   void update() => setState(() {});
 
   //수정버튼 누르면 작동하는 곳
   void onTapModifyButton(Diary diary) async {
     var modifyDiary = diary.clone(
-      type: ABC,
+      type: getABC(),
       date: getToday(),
       time: getTimeNow(),
-      money: _MoneyTextEditingController.text,
-      contents: _ContentTextEditingController.text,
-      category: _CategoryTextEditingController.text,
-      memo: _MemoTextEditingController.text,
+      money: _moneyTextEditingController.text,
+      contents: _contentTextEditingController.text,
+      category: _categoryTextEditingController.text,
+      memo: _memoTextEditingController.text,
     );
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false);
     await SqlDiaryCrudRepository.update(modifyDiary);
@@ -45,7 +69,15 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
   }
 
   // ABC 선택 관련 변수
-  String ABC = 'C'; //일단 기본적으로 모든 소비는 불필요하다는 느낌을 주기 위해 디폴트값은 C로 설정
+  String getABC(){
+    if (ABC == '') {
+      String preABC = widget.diary.type!;
+      return preABC;
+    }
+    return ABC;
+  }
+
+  String ABC ='';
   bool aButton = false;
   bool bButton = false;
   bool cButton = false;
@@ -76,14 +108,12 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
   }
 
   //날짜 선택 관련 변수
-  String selectedDate = "";
+  String selectedDate = '';
 
   // 기본 오늘 날짜 구하는 곳
   String getToday() {
     if (selectedDate == "") {
-      DateTime now = DateTime.now();
-      DateFormat formatter = DateFormat('yyyy-MM-dd (E)', 'ko');
-      String Today = formatter.format(now);
+      String Today = widget.diary.date!;
       return Today;
     }
     return selectedDate;
@@ -123,17 +153,9 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
   // 기본 지금 시간 구하는 곳
   String getTimeNow() {
     if (selectedTime == "") {
-      DateTime now = DateTime.now();
-      DateFormat formatter;
-      if (now.hour < 12) {
-        formatter = DateFormat('a HH:mm', 'ko');
-      } else {
-        formatter = DateFormat('a HH:mm', 'ko');
-      }
-      String NowTime = formatter.format(now);
+      String NowTime = widget.diary.time!;
       return NowTime;
     }
-
     return selectedTime;
   }
 
@@ -187,37 +209,36 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
   }
 
   //분류 부분 컨트롤러
-  final TextEditingController _CategoryTextEditingController =
-      TextEditingController();
+  late final TextEditingController _categoryTextEditingController;
 
   //금액 부분 컨트롤러
-  final TextEditingController _MoneyTextEditingController =
-      TextEditingController();
-
-  //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
-  String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
+  late final TextEditingController _moneyTextEditingController;
 
   //내용 부분 컨트롤러
-  final TextEditingController _ContentTextEditingController =
-      TextEditingController();
+  late final TextEditingController _contentTextEditingController;
 
   //메모 부분 컨트롤러
-  final TextEditingController _MemoTextEditingController =
-      TextEditingController();
+  late final TextEditingController _memoTextEditingController;
+
 
   final ImagePicker picker = ImagePicker();
   XFile? _image; // 카메라로 촬영한 이미지를 저장할 변수
+
+  //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
+  String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
 
   //금액 부분 관련
   bool isMoneyFocused = false;
   FocusNode focusNode = FocusNode();
   void addMoney(int addVal){
-    if( _MoneyTextEditingController.text == "" ) _MoneyTextEditingController.text = moneyToString(addVal);
-    else{
-      int newVal = int.parse(_MoneyTextEditingController.text.replaceAll(',', '')) + addVal;
-      _MoneyTextEditingController.text = moneyToString(newVal);
+    if( _moneyTextEditingController.text == "" ) {
+      _moneyTextEditingController.text = moneyToString(addVal);
+    } else{
+      int newVal = int.parse(_moneyTextEditingController.text.replaceAll(',', '')) + addVal;
+      _moneyTextEditingController.text = moneyToString(newVal);
     }
   }
+
   Widget makeButtons(){
     return isMoneyFocused
         ? Column(
@@ -235,19 +256,6 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
       ],
     )
         : const SizedBox.shrink();
-  }
-
-  @override
-  void initState() {
-    isSelected = [aButton, bButton, cButton];
-    super.initState();
-
-    focusNode.addListener(() {
-      setState(() {
-        isMoneyFocused = focusNode.hasFocus;
-      });
-    });
-
   }
 
   @override
@@ -438,7 +446,10 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                           ),
                         ),
                         Expanded(
-                          child: MoneyTextField(controller: _MoneyTextEditingController,focusNode: focusNode),
+                          child: MoneyTextField(
+                            controller: _moneyTextEditingController,
+                            focusNode: focusNode,
+                          ),
                         ),
                       ],
                     ),
@@ -474,7 +485,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                   ),
                   Flexible(
                     child: TextField(
-                      controller: _CategoryTextEditingController,
+                      controller: _categoryTextEditingController,
                       decoration: InputDecoration(
                         labelText: '분류를 입력하세요',
                         hintText: 'ex) 식비, 교통비...',
@@ -526,7 +537,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                   ),
                   Flexible(
                     child: TextField(
-                      controller: _ContentTextEditingController,
+                      controller: _contentTextEditingController,
                       decoration: InputDecoration(
                         labelText: '내용을 입력하세요',
                         hintText: 'ex) 점심 값, 군것질...',
@@ -536,7 +547,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
 
                         //한 번에 내용 삭제 하는 아이콘(suffixIcon이 오른쪽)
                         suffixIcon: GestureDetector(
-                          onTap: () => _ContentTextEditingController.clear(),
+                          onTap: () => _contentTextEditingController.clear(),
                           child: Icon(
                             Icons.cancel,
                           ),
@@ -567,7 +578,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
             Divider(
               height: 10,
               color: Colors.grey.shade300,
-              thickness: 5,
+              thickness: 5
             ),
 
             //메모 입력하는 부분
@@ -580,7 +591,8 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                 children: [
                   Flexible(
                     child: TextField(
-                      controller: _MemoTextEditingController,
+                      controller: _memoTextEditingController,
+                      maxLines: null,
                       decoration: InputDecoration(
                         labelText: '메모',
                         alignLabelWithHint: true,
