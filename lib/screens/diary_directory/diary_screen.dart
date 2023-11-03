@@ -12,10 +12,10 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 
 import '../../widgets/day_diary_widget.dart';
+import '../../widgets/total_abc_money.dart';
 
 class DiaryScreen extends StatefulWidget {
   const DiaryScreen({super.key});
-
 
   @override
   State<DiaryScreen> createState() => _DiaryScreenState();
@@ -54,98 +54,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
       body: Column(
         children: [
           // ABC 항목 별 금액 표시해주는 곳
-          Container(
-            padding: EdgeInsets.all(2),
-            //ABC 칸 밑에 회색 음영 주는 부분
-            decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 3,
-                  blurStyle: BlurStyle.outer,
-                ),
-              ],
-
-            ),
-
-            child: Row(
-              children: [
-                // A 항목 금액
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: [
-                        Text(
-                          'A',
-                          style: TextStyle(
-                              fontFamily: "Yeongdeok-Sea",
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Text('A 부분',
-                            style: TextStyle(
-                              fontFamily: "Yeongdeok-Sea",
-                              fontWeight: FontWeight.w600,
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // B 항목 금액
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        Text(
-                          'B',
-                          style: TextStyle(
-                              fontFamily: "Yeongdeok-Sea",
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Text('B 부분',
-                            style: TextStyle(
-                              fontFamily: "Yeongdeok-Sea",
-                              fontWeight: FontWeight.w600,
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // C 항목 금액
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        Text(
-                          'C',
-                          style: TextStyle(
-                              fontFamily: "Yeongdeok-Sea",
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Text('C 부분',
-                            style: TextStyle(
-                              fontFamily: "Yeongdeok-Sea",
-                              color: Colors.red,
-                              fontWeight: FontWeight.w900,
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          TotalAbcMoney(),
 
           //가계부 리스트들
           Expanded(

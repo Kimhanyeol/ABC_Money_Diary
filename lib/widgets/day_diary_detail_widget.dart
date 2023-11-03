@@ -2,6 +2,7 @@
 
 import 'package:abc_money_diary/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/diary_model.dart';
 import '../repository/sql_diary_crud_repository.dart';
@@ -83,7 +84,7 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: Text(widget.diary.type.toString()),
+      title: Text(widget.diary.type!),
       titleTextStyle: TextStyle(
           color: Colors.red, fontSize: 50, fontWeight: FontWeight.w600),
       scrollable: true,
@@ -96,7 +97,7 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              '금액 : ${widget.diary.money} 원',
+              '금액 : ${moneyToString(widget.diary.money!)} 원',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -164,4 +165,14 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
       ],
     );
   }
+
+  String moneyToString(String money){
+    if (money == "") {
+      money = "0";
+    }
+    int temp = int.parse(money);
+    String result = NumberFormat.decimalPattern('ko_KR').format(temp);
+    return result;
+  }
+  
 }

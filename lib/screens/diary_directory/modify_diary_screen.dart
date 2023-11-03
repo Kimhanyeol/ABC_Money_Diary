@@ -57,7 +57,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
       type: getABC(),
       date: getToday(),
       time: getTimeNow(),
-      money: _moneyTextEditingController.text,
+      money: moneyToCleanString(_moneyTextEditingController.text),
       contents: _contentTextEditingController.text,
       category: _categoryTextEditingController.text,
       memo: _memoTextEditingController.text,
@@ -208,28 +208,13 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
     }
   }
 
-  //분류 부분 컨트롤러
-  late final TextEditingController _categoryTextEditingController;
-
-  //금액 부분 컨트롤러
-  late final TextEditingController _moneyTextEditingController;
-
-  //내용 부분 컨트롤러
-  late final TextEditingController _contentTextEditingController;
-
-  //메모 부분 컨트롤러
-  late final TextEditingController _memoTextEditingController;
-
-
   final ImagePicker picker = ImagePicker();
   XFile? _image; // 카메라로 촬영한 이미지를 저장할 변수
-
-  //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
-  String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
 
   //금액 부분 관련
   bool isMoneyFocused = false;
   FocusNode focusNode = FocusNode();
+
   void addMoney(int addVal){
     if( _moneyTextEditingController.text == "" ) {
       _moneyTextEditingController.text = moneyToString(addVal);
@@ -237,25 +222,6 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
       int newVal = int.parse(_moneyTextEditingController.text.replaceAll(',', '')) + addVal;
       _moneyTextEditingController.text = moneyToString(newVal);
     }
-  }
-
-  Widget makeButtons(){
-    return isMoneyFocused
-        ? Column(
-      children: [
-        const SizedBox(height: 10,),
-        Row(
-          children: [
-            CustomButton( onTap: () { addMoney(1000); }, text: "+1천",),
-            CustomButton( onTap: () { addMoney(5000); }, text: "+5천",),
-            CustomButton( onTap: () { addMoney(10000); }, text: "+1만",),
-            CustomButton( onTap: () { addMoney(50000); }, text: "+5만",),
-            CustomButton( onTap: () { addMoney(100000); }, text: "+10만",),
-          ],
-        )
-      ],
-    )
-        : const SizedBox.shrink();
   }
 
   @override
@@ -702,6 +668,57 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
           )
         : SizedBox();
   }
+
+  Widget makeButtons(){
+    return isMoneyFocused
+        ? Column(
+      children: [
+        const SizedBox(height: 10,),
+        Row(
+          children: [
+            CustomButton( onTap: () { addMoney(1000); }, text: "+1천",),
+            CustomButton( onTap: () { addMoney(5000); }, text: "+5천",),
+            CustomButton( onTap: () { addMoney(10000); }, text: "+1만",),
+            CustomButton( onTap: () { addMoney(50000); }, text: "+5만",),
+            CustomButton( onTap: () { addMoney(100000); }, text: "+10만",),
+          ],
+        )
+      ],
+    )
+        : const SizedBox.shrink();
+  }
+
+  //money를 int 형식으로 바꿔주기
+  int moneyToInt(String money){
+    if(money == "") {
+      money = "0";
+    }
+    int result = int.parse(money.replaceAll(',', ''));
+    return result;
+  }
+
+  //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
+  String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
+
+  //돈 깔끔하게 숫자만 있게 만드는 거
+  String moneyToCleanString(String money){
+    String result = money.replaceAll(',', '');
+    return result;
+  }
+
+  //분류 부분 컨트롤러
+  late final TextEditingController _categoryTextEditingController;
+
+  //금액 부분 컨트롤러
+  late final TextEditingController _moneyTextEditingController;
+
+  //내용 부분 컨트롤러
+  late final TextEditingController _contentTextEditingController;
+
+  //메모 부분 컨트롤러
+  late final TextEditingController _memoTextEditingController;
+
+
 }
 
 //카메라 아이콘 클릭 시 카메라로 사진을 찍을 건지 갤러리에서 선택할건지 목록

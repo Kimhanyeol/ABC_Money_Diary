@@ -10,21 +10,48 @@ class SqlDiaryCrudRepository {
     return diary.clone(id: id);
   }
 
-  //가계부 목록 전체 불러오기
+  // 가계부 목록 전체 불러오기
   static Future<List<Diary>> getList() async {
     var db = await SqlDataBase().database;
     var result = await db.query(
       Diary.tableName,
       columns: [
         DiaryFields.id,
+        DiaryFields.money,
         DiaryFields.type,
         DiaryFields.date,
         DiaryFields.time,
         DiaryFields.category,
-        DiaryFields.money,
         DiaryFields.contents,
         DiaryFields.memo,
       ],
+      orderBy: DiaryFields.time,
+    );
+
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
+  }
+
+  // A 항목 가계부 목록 전체 불러오기
+  static Future<List<Diary>> getListA() async {
+    var db = await SqlDataBase().database;
+    var result = await db.query(
+      Diary.tableName,
+      columns: [
+        DiaryFields.id,
+        DiaryFields.money,
+        DiaryFields.type,
+        DiaryFields.date,
+        DiaryFields.time,
+        DiaryFields.category,
+        DiaryFields.contents,
+        DiaryFields.memo,
+      ],
+      where: '${DiaryFields.type} = ?',
+      whereArgs: ['A'],
       orderBy: DiaryFields.time,
     );
 
@@ -35,12 +62,67 @@ class SqlDiaryCrudRepository {
     ).toList();
   }
 
-  //한 달치 가계부 불러오기
-  static Future<List<Diary>> getMonthList() async {
+  // B 항목 가계부 목록 전체 불러오기
+  static Future<List<Diary>> getListB() async {
+    var db = await SqlDataBase().database;
+    var result = await db.query(
+      Diary.tableName,
+      columns: [
+        DiaryFields.id,
+        DiaryFields.money,
+        DiaryFields.type,
+        DiaryFields.date,
+        DiaryFields.time,
+        DiaryFields.category,
+        DiaryFields.contents,
+        DiaryFields.memo,
+      ],
+      where: '${DiaryFields.type} = ?',
+      whereArgs: ['B'],
+      orderBy: DiaryFields.time,
+    );
+
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
+  }
+
+  // C 항목 가계부 목록 전체 불러오기
+  static Future<List<Diary>> getListC() async {
+    var db = await SqlDataBase().database;
+    var result = await db.query(
+      Diary.tableName,
+      columns: [
+        DiaryFields.id,
+        DiaryFields.money,
+        DiaryFields.type,
+        DiaryFields.date,
+        DiaryFields.time,
+        DiaryFields.category,
+        DiaryFields.contents,
+        DiaryFields.memo,
+      ],
+      where: '${DiaryFields.type} = ?',
+      whereArgs: ['C'],
+      orderBy: DiaryFields.time,
+    );
+
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
+  }
+
+  // A 한 달치 가계부 불러오기
+  static Future<List<Diary>> getMonthListA() async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
         "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('now','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('now','start of month','+1 month','-1 day','localtime') ORDER BY ${DiaryFields.time} ;",
+            "AND ${DiaryFields.date} <= date('now','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'A'"
+            "ORDER BY ${DiaryFields.time} ;",
         null
     );
 
@@ -49,6 +131,92 @@ class SqlDiaryCrudRepository {
         return Diary.fromJson(data);
       },
     ).toList();
+  }
+
+  // B 한 달치 가계부 불러오기
+  static Future<List<Diary>> getMonthListB() async {
+    var db = await SqlDataBase().database;
+    var result = await db.rawQuery(
+        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('now','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('now','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'B'"
+            "ORDER BY ${DiaryFields.time} ;",
+        null
+    );
+
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
+  }
+
+  // C 한 달치 가계부 불러오기
+  static Future<List<Diary>> getMonthListC() async {
+    var db = await SqlDataBase().database;
+    var result = await db.rawQuery(
+        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('now','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('now','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'C'"
+            "ORDER BY ${DiaryFields.time} ;",
+        null
+    );
+
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
+  }
+
+  //돈 깔끔하게 숫자만 있게 만드는 거
+  static String resultToCleanString(String str){
+    List num = ['0','1','2','3','4','5','6','7','8','9'];
+    int firstIndex=0;
+    int lastIndex=0;
+    var temp = str.split('');
+
+    for(int i=0;i<str.length;i++){
+      if(num.contains(temp[i])) {
+        firstIndex = i;
+        break;
+      }
+    }
+
+    for(int i=0;i<str.length;i++){
+      if(temp[i]=='.' || temp[i]=='}') {
+        lastIndex = i;
+        break;
+      }
+    }
+
+    String result = str.substring(firstIndex, lastIndex);
+    return result;
+  }
+
+  // A 총합 불러오기
+  static Future<String> getTotalMoneyA() async {
+    var db = await SqlDataBase().database;
+    var results = await db.rawQuery(
+        "SELECT SUM(${DiaryFields.money}) FROM ${Diary.tableName} WHERE ${DiaryFields.type} = 'A' ");
+    String str = results.toString();
+    return resultToCleanString(str);
+  }
+
+  // B 총합 불러오기
+  static Future<String> getTotalMoneyB() async {
+    var db = await SqlDataBase().database;
+    var results = await db.rawQuery(
+        "SELECT SUM(${DiaryFields.money}) as sum FROM ${Diary.tableName} WHERE ${DiaryFields.type} = 'B' ");
+    String str = results.toString();
+    return resultToCleanString(str);
+  }
+
+  // C 총합 불러오기
+  static Future<String> getTotalMoneyC() async {
+    var db = await SqlDataBase().database;
+    var results = await db.rawQuery(
+        "SELECT SUM(${DiaryFields.money}) as sum FROM ${Diary.tableName} WHERE ${DiaryFields.type} = 'C' ");
+    String str = results.toString();
+    return resultToCleanString(str);
   }
 
   //가계부 한 개를 선택해서 불러오기
@@ -81,7 +249,8 @@ class SqlDiaryCrudRepository {
       return null;
     }
   }
-  
+
+  //가계부 수정
   static Future<int> update(Diary diary) async {
     var db = await SqlDataBase().database;
     return await db.update(
@@ -92,6 +261,7 @@ class SqlDiaryCrudRepository {
     );
   }
 
+  //가계부 삭제
   static Future<int> delete(int id) async {
     var db = await SqlDataBase().database;
     return await db.delete(
@@ -101,6 +271,7 @@ class SqlDiaryCrudRepository {
     );
   }
 
+  //가계부 전체 삭제
   static Future<int> deleteAll() async {
     var db = await SqlDataBase().database;
     return await db.delete(

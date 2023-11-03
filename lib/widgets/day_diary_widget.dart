@@ -1,6 +1,7 @@
 //가계부 상세내용 보여주는 위젯
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/diary_model.dart';
 import 'day_diary_detail_widget.dart';
@@ -76,12 +77,11 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
                           fontFamily: "Yeongdeok-Sea",
                         )),
                   if (widget.diary.type == 'C')
-                    Text('C항목 ￦ ${widget.diary.money}',
+                    Text('C항목 ￦ ${moneyToString(widget.diary.money!)}',
                         style: TextStyle(
                           fontSize: 15,
                           fontFamily: "Yeongdeok-Sea",
                         )),
-
                 ],
               ),
 
@@ -101,7 +101,7 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
                     Text(widget.diary.type!),
                     Text(widget.diary.time!),
                     Text(widget.diary.category!),
-                    Text('￦ ${widget.diary.money}'),
+                    Text('￦ ${moneyToString(widget.diary.money!)}'),
                   ],
                 ),
               ),
@@ -110,6 +110,15 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
         ),
       ),
     );
+  }
+
+  String moneyToString(String money){
+    if (money == "") {
+      money = "0";
+    }
+    int temp = int.parse(money);
+    String result = NumberFormat.decimalPattern('ko_KR').format(temp);
+    return result;
   }
 
   void update() => setState(() {});

@@ -32,7 +32,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       type: abc,
       date: getToday(),
       time: getTimeNow(),
-      money: _moneyTextEditingController.text,
+      money: moneyToCleanString(_moneyTextEditingController.text),
       contents: _contentTextEditingController.text,
       category: _categoryTextEditingController.text,
       memo: _memoTextEditingController.text,
@@ -189,31 +189,13 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     }
   }
 
-  //분류 부분 컨트롤러
-  final TextEditingController _categoryTextEditingController =
-      TextEditingController();
-
-  //금액 부분 컨트롤러
-  final TextEditingController _moneyTextEditingController =
-      TextEditingController();
-
-  //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
-  String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
-
-  //내용 부분 컨트롤러
-  final TextEditingController _contentTextEditingController =
-      TextEditingController();
-
-  //메모 부분 컨트롤러
-  final TextEditingController _memoTextEditingController =
-      TextEditingController();
-
   final ImagePicker picker = ImagePicker();
   XFile? _image; // 카메라로 촬영한 이미지를 저장할 변수
 
   bool isMoneyFocused = false;
   FocusNode focusNode = FocusNode();
 
+  //돈 버튼 누르면 금액 올라가는 기능
   void addMoney(int addVal){
     if( _moneyTextEditingController.text == "" ) {
       _moneyTextEditingController.text = moneyToString(addVal);
@@ -652,6 +634,32 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
               ),
             ),
 
+            //전체삭제버튼
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: ElevatedButton(
+                onPressed: () {
+                  SqlDiaryCrudRepository.deleteAll();
+                  Navigator.pop(context);
+                  update();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                child: Text(
+                  '삭제하기',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+
             //화면 끝에 안 닿게 만들기 위한 공간
             SizedBox(
               height: 60,
@@ -674,7 +682,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
         : SizedBox();
   }
 
-
   //금액 입력 부분에 천원, 만원, 이런 식으로 클릭해서 입력하는 버튼
   Widget makeButtons(){
     return isMoneyFocused
@@ -694,6 +701,42 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     )
         : const SizedBox.shrink();
   }
+
+  //money를 int 형식으로 바꿔주기
+  int moneyToInt(String money){
+    if(money == "") {
+      money = "0";
+    }
+    int result = int.parse(money.replaceAll(',', ''));
+    return result;
+  }
+
+  //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
+  String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
+
+  //돈 깔끔하게 숫자만 있게 만드는 거
+  String moneyToCleanString(String money){
+    String result = money.replaceAll(',', '');
+    return result;
+  }
+
+
+  //분류 부분 컨트롤러
+  final TextEditingController _categoryTextEditingController =
+  TextEditingController();
+
+  //금액 부분 컨트롤러
+  final TextEditingController _moneyTextEditingController =
+  TextEditingController();
+
+  //내용 부분 컨트롤러
+  final TextEditingController _contentTextEditingController =
+  TextEditingController();
+
+  //메모 부분 컨트롤러
+  final TextEditingController _memoTextEditingController =
+  TextEditingController();
+
 
 }
 

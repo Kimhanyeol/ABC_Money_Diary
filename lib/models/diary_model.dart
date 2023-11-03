@@ -60,7 +60,7 @@ class Diary {
           ? ''
           : json[DiaryFields.category] as String,
       money: json[DiaryFields.money] == null
-          ? ''
+          ? '0'
           : json[DiaryFields.money] as String,
       contents: json[DiaryFields.contents] == null
           ? ''
