@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 //스테이터스바 불투명하게 만들기 위해 임포트
 import 'package:flutter/services.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
-class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
+class MainAppBar extends StatefulWidget implements PreferredSizeWidget {
   MainAppBar({super.key});
 
-  final String Month = DateFormat('yyyy년 MM월').format(DateTime.now());
+  late String diaryMonth;
+  DateTime selectedDate = DateTime.now();
 
+  @override
+  State<MainAppBar> createState() => _MainAppBarState();
+
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => Size.fromHeight(70);
+}
+
+class _MainAppBarState extends State<MainAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -16,7 +28,6 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: Colors.orange,
         statusBarIconBrightness: Brightness.light,
-
         systemNavigationBarColor: Colors.orange,
         systemNavigationBarIconBrightness: Brightness.light,
       ),
@@ -28,17 +39,63 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.orange,
       //앱 바 밑에 음영 사라지게 만드는 코드
       elevation: 2,
-      title: Text(
-        '< 2023 년 10 월 >',
-        style: TextStyle(
-          fontSize: 25,
-          color: Colors.white,
-          fontFamily: "Yeongdeok-Sea",
-        ),
+
+      leadingWidth: double.infinity,
+      leading: Row(
+        children: [
+          IconButton(
+              onPressed: onTapLeftChevron,
+              icon: Icon(
+                Icons.chevron_left_outlined,
+                color: Colors.white,
+              )),
+          TextButton(
+            onPressed: () => DatePicker.showSimpleDatePicker(
+              context,
+              initialDate: widget.selectedDate,
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2090),
+              dateFormat: "yyyy년-MMMM",
+              locale: DateTimePickerLocale.ko,
+              looping: false,
+              cancelText: '취소',
+              confirmText: '확인',
+            ).then((date) {
+              if (date != null) {
+                setState(() {
+                  widget.selectedDate = date;
+                  widget.diaryMonth =
+                      DateFormat('yyyy-MM-dd').format(widget.selectedDate);
+                });
+              }
+            }),
+            child: Text(
+              getTimeNow(),
+              style: TextStyle(
+                fontSize: 25,
+                color: Colors.white,
+                fontFamily: "Yeongdeok-Sea",
+              ),
+            ),
+          ),
+          IconButton(
+              onPressed: onTapRightChevron,
+              icon: Icon(
+                Icons.chevron_right_outlined,
+                color: Colors.white,
+              )),
+        ],
       ),
       actions: [
         IconButton(
-          onPressed: null,
+          onPressed: () => Fluttertoast.showToast(
+            msg: widget.diaryMonth,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.redAccent,
+            fontSize: 20,
+            textColor: Colors.white,
+            toastLength: Toast.LENGTH_SHORT,
+          ),
           icon: Icon(
             Icons.question_answer_outlined,
             size: 30,
@@ -58,7 +115,27 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  @override
-  // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(70);
+  void update() {
+    setState(() {});
+  }
+
+  String getTimeNow() {
+    widget.diaryMonth = DateFormat('yyyy-MM-dd').format(widget.selectedDate);
+    return DateFormat('yyyy 년 MM 월').format(widget.selectedDate);
+  }
+
+  void onTapLeftChevron() {
+    widget.selectedDate =
+        DateTime(widget.selectedDate.year, widget.selectedDate.month - 1);
+    widget.diaryMonth = DateFormat('yyyy-MM-dd').format(widget.selectedDate);
+
+    update();
+  }
+
+  void onTapRightChevron() {
+    widget.selectedDate =
+        DateTime(widget.selectedDate.year, widget.selectedDate.month + 1);
+    widget.diaryMonth = DateFormat('yyyy-MM-dd').format(widget.selectedDate);
+    update();
+  }
 }

@@ -4,21 +4,23 @@ import 'package:intl/intl.dart';
 import '../repository/sql_diary_crud_repository.dart';
 
 class TotalAbcMoney extends StatelessWidget {
-  const TotalAbcMoney({super.key});
+  final String diaryMonth;
+
+  const TotalAbcMoney({super.key, required this.diaryMonth});
 
   //A 합 가져오기
   Future<String> _loadTotalMoneyA() async {
-    return await SqlDiaryCrudRepository.getTotalMoneyA();
+    return await SqlDiaryCrudRepository.getTotalMoneyA(diaryMonth);
   }
 
   //B 합 가져오기
   Future<String> _loadTotalMoneyB() async {
-    return await SqlDiaryCrudRepository.getTotalMoneyB();
+    return await SqlDiaryCrudRepository.getTotalMoneyB(diaryMonth);
   }
 
   //C 합 가져오기
   Future<String> _loadTotalMoneyC() async {
-    return await SqlDiaryCrudRepository.getTotalMoneyC();
+    return await SqlDiaryCrudRepository.getTotalMoneyC(diaryMonth);
   }
 
   @override
@@ -156,6 +158,7 @@ class TotalAbcMoney extends StatelessWidget {
                         ),
                         Text(moneyToCleanString(datas!),
                             style: TextStyle(
+                              color: Colors.red,
                               fontFamily: "Yeongdeok-Sea",
                               fontWeight: FontWeight.w600,
                             )),

@@ -10,6 +10,9 @@ class SqlDiaryCrudRepository {
     return diary.clone(id: id);
   }
 
+
+  /* 목록 전체 불러오기 */
+
   // 가계부 목록 전체 불러오기
   static Future<List<Diary>> getList() async {
     var db = await SqlDataBase().database;
@@ -116,12 +119,33 @@ class SqlDiaryCrudRepository {
     ).toList();
   }
 
-  // A 한 달치 가계부 불러오기
-  static Future<List<Diary>> getMonthListA() async {
+
+
+  /* 한 달치 목록 불러오기 */
+
+  // 한 달치 가계부 불러오기
+  static Future<List<Diary>> getMonthList(String month) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('now','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('now','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'A'"
+        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime')"
+            "ORDER BY ${DiaryFields.time} ;",
+        null
+    );
+
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
+  }
+
+  // A 한 달치 가계부 불러오기
+  static Future<List<Diary>> getMonthListA(String month) async {
+    var db = await SqlDataBase().database;
+    var result = await db.rawQuery(
+        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'A'"
             "ORDER BY ${DiaryFields.time} ;",
         null
     );
@@ -134,11 +158,11 @@ class SqlDiaryCrudRepository {
   }
 
   // B 한 달치 가계부 불러오기
-  static Future<List<Diary>> getMonthListB() async {
+  static Future<List<Diary>> getMonthListB(String month) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('now','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('now','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'B'"
+        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'B'"
             "ORDER BY ${DiaryFields.time} ;",
         null
     );
@@ -151,11 +175,11 @@ class SqlDiaryCrudRepository {
   }
 
   // C 한 달치 가계부 불러오기
-  static Future<List<Diary>> getMonthListC() async {
+  static Future<List<Diary>> getMonthListC(String month) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('now','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('now','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'C'"
+        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'C'"
             "ORDER BY ${DiaryFields.time} ;",
         null
     );
@@ -167,57 +191,80 @@ class SqlDiaryCrudRepository {
     ).toList();
   }
 
-  //돈 깔끔하게 숫자만 있게 만드는 거
-  static String resultToCleanString(String str){
-    List num = ['0','1','2','3','4','5','6','7','8','9'];
-    int firstIndex=0;
-    int lastIndex=0;
-    var temp = str.split('');
 
-    for(int i=0;i<str.length;i++){
-      if(num.contains(temp[i])) {
-        firstIndex = i;
-        break;
-      }
-    }
+  /* 하루치 목록 불러오기 */
 
-    for(int i=0;i<str.length;i++){
-      if(temp[i]=='.' || temp[i]=='}') {
-        lastIndex = i;
-        break;
-      }
-    }
+  // 하루치 가계부 불러오기
+  static Future<List<Diary>> getDayList() async {
+    var db = await SqlDataBase().database;
+    var result = await db.rawQuery(
+        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} == date('now','localtime') ORDER BY ${DiaryFields.time} ;",
+        null
+    );
 
-    String result = str.substring(firstIndex, lastIndex);
-    return result;
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
   }
 
+
+
+  /* ABC 총 합 불러오기 */
+
   // A 총합 불러오기
-  static Future<String> getTotalMoneyA() async {
+  static Future<String> getTotalMoneyA(String month) async {
     var db = await SqlDataBase().database;
     var results = await db.rawQuery(
-        "SELECT SUM(${DiaryFields.money}) FROM ${Diary.tableName} WHERE ${DiaryFields.type} = 'A' ");
+        "SELECT SUM(${DiaryFields.money}) FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'A' ");
+
     String str = results.toString();
+
+    if(str.contains('null')) {
+      return '0';
+    }
+
     return resultToCleanString(str);
   }
 
   // B 총합 불러오기
-  static Future<String> getTotalMoneyB() async {
+  static Future<String> getTotalMoneyB(String month) async {
     var db = await SqlDataBase().database;
     var results = await db.rawQuery(
-        "SELECT SUM(${DiaryFields.money}) as sum FROM ${Diary.tableName} WHERE ${DiaryFields.type} = 'B' ");
+        "SELECT SUM(${DiaryFields.money}) as sum FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'B' ");
+
     String str = results.toString();
+
+    if(str.contains('null')) {
+      return '0';
+    }
+
     return resultToCleanString(str);
   }
 
   // C 총합 불러오기
-  static Future<String> getTotalMoneyC() async {
+  static Future<String> getTotalMoneyC(String month) async {
     var db = await SqlDataBase().database;
     var results = await db.rawQuery(
-        "SELECT SUM(${DiaryFields.money}) as sum FROM ${Diary.tableName} WHERE ${DiaryFields.type} = 'C' ");
+        "SELECT SUM(${DiaryFields.money}) as sum FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'C' ");
+
     String str = results.toString();
+
+    if(str.contains('null')) {
+      return '0';
+    }
+
     return resultToCleanString(str);
   }
+
+
+
+
+  /* 선택이나 수정, 삭제 등 */
 
   //가계부 한 개를 선택해서 불러오기
   static Future<Diary?> getDiaryOne(int id) async {
@@ -280,4 +327,30 @@ class SqlDiaryCrudRepository {
   }
 
 
+
+
+  //돈 깔끔하게 숫자만 있게 만드는 거
+  static String resultToCleanString(String str){
+    List num = ['0','1','2','3','4','5','6','7','8','9'];
+    int firstIndex=0;
+    int lastIndex=0;
+    var temp = str.split('');
+
+    for(int i=0;i<str.length;i++){
+      if(num.contains(temp[i])) {
+        firstIndex = i;
+        break;
+      }
+    }
+
+    for(int i=0;i<str.length;i++){
+      if(temp[i]=='.' || temp[i]=='}') {
+        lastIndex = i;
+        break;
+      }
+    }
+
+    String result = str.substring(firstIndex, lastIndex);
+    return result;
+  }
 }

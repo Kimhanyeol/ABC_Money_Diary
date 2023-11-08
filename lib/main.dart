@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
           dragHandleColor: Colors.orange,
           dragHandleSize: Size(50, 5),
         ),
+
       ),
       home: HomeScreen(),
     );

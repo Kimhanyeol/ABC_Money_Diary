@@ -1,4 +1,3 @@
-import 'package:abc_money_diary/bars/main_appbar.dart';
 import 'package:abc_money_diary/screens/calendar_screen.dart';
 import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
 import 'package:abc_money_diary/screens/etc_screen.dart';
@@ -42,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(),
       body: WillPopScope(
         onWillPop: onWillPop,
         child: Center(

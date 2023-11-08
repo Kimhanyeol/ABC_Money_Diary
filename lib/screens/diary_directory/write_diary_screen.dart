@@ -145,6 +145,8 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     TimeOfDay? selected = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+
+
       builder: (context, child) {
         return Theme(
             data: Theme.of(context).copyWith(
@@ -625,32 +627,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                 ),
                 child: Text(
                   '저장하기',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-
-            //전체삭제버튼
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: ElevatedButton(
-                onPressed: () {
-                  SqlDiaryCrudRepository.deleteAll();
-                  Navigator.pop(context);
-                  update();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                child: Text(
-                  '삭제하기',
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w600,

@@ -32,7 +32,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
         TextEditingController(text: widget.diary.category);
 
     _moneyTextEditingController =
-        TextEditingController(text: widget.diary.money);
+        TextEditingController(text: moneyToString(moneyToInt(widget.diary.money!)));
 
     _contentTextEditingController =
         TextEditingController(text: widget.diary.contents);
