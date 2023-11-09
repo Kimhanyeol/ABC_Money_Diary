@@ -142,6 +142,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                     elements: datas!,
                     groupBy: (element) => element.date,
                     order: GroupedListOrder.DESC,
+                    padding: EdgeInsets.all(0),
                     itemBuilder: (context, element) => DayDiaryWidget(diary: element),
                     //그룹 헤더 디자인부분
                     groupSeparatorBuilder: (value) {

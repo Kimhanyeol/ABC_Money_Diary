@@ -38,9 +38,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   //하루치 가계부 목록 가져오기
-  Future<List<Diary>> _loadDiaryList() async {
-    String diaryMonth = DateFormat('yyyy-MM-dd').format(selectedDay);
-    return await SqlDiaryCrudRepository.getList();
+  Future<List<Diary>> _loadDiaryList(DateTime date) async {
+    return await SqlDiaryCrudRepository.getDayList(DateFormat('yyyy-MM-dd').format(date));
   }
 
   @override
@@ -72,15 +71,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
           title: Text('ABC 가계부'),
         ),
 
-        //바디
         body: Column(
           children: [
+            // 달력 부분
             TableCalendar(
               focusedDay: focusedDay,
               firstDay: DateTime(2000, 01),
               lastDay: DateTime.timestamp(),
               locale: 'ko-KR',
-              daysOfWeekHeight: 50,
+              daysOfWeekHeight: 20,
 
               //이벤트 있는 날짜 달력에 입력
               eventLoader: _getEventsForDay,
@@ -163,9 +162,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
               },
             ),
 
+            // 날짜별 가계부 목록 보여주는 부분
             Expanded(
               child: FutureBuilder(
-                future: _loadDiaryList(),
+                future: _loadDiaryList(selectedDay),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Center(
@@ -178,6 +178,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       elements: datas!,
                       groupBy: (element) => element.date,
                       order: GroupedListOrder.DESC,
+                      padding: EdgeInsets.all(0),
                       itemBuilder: (context, element) =>
                           DayDiaryWidget(diary: element),
                       //그룹 헤더 디자인부분

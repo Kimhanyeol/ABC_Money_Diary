@@ -195,10 +195,11 @@ class SqlDiaryCrudRepository {
   /* 하루치 목록 불러오기 */
 
   // 하루치 가계부 불러오기
-  static Future<List<Diary>> getDayList() async {
+  static Future<List<Diary>> getDayList(String date) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} == date('now','localtime') ORDER BY ${DiaryFields.time} ;",
+        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$date', 'localtime') "
+            " AND ${DiaryFields.date} <= date('$date', 'localtime', '+1 days') ORDER BY ${DiaryFields.time} ;",
         null
     );
 
