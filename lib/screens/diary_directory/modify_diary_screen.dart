@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../widgets/category_widget.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/money_text_field_widget.dart';
 
@@ -451,10 +452,15 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                   ),
                   Flexible(
                     child: TextField(
+                      onTap: _onTapcategory,
                       controller: _categoryTextEditingController,
+
+                      canRequestFocus: false,
+                      //키보드 안올라오게 만드는 거
+                      keyboardType: TextInputType.none,
+
                       decoration: InputDecoration(
-                        labelText: '분류를 입력하세요',
-                        hintText: 'ex) 식비, 교통비...',
+                        labelText: '분류를 선택하세요',
                         alignLabelWithHint: true,
                         labelStyle: TextStyle(color: Colors.brown.shade200),
                         hintStyle: TextStyle(color: Colors.brown.shade200),
@@ -466,6 +472,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                           horizontal: 5,
                         ),
                       ),
+
                       style: TextStyle(
                         color: Colors.brown,
                         fontSize: 18,
@@ -718,6 +725,23 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
   //메모 부분 컨트롤러
   late final TextEditingController _memoTextEditingController;
 
+  void _onTapcategory() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 200,
+          child: CategoryWidget(
+              categoryController: _categoryTextEditingController),
+        );
+      },
+      barrierColor: Colors.transparent,
+      backgroundColor: Colors.black54,
+      isScrollControlled: true,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+    ).then((value) => update());
+  }
 
 }
 

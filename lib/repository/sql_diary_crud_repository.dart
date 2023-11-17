@@ -10,7 +10,6 @@ class SqlDiaryCrudRepository {
     return diary.clone(id: id);
   }
 
-
   /* 목록 전체 불러오기 */
 
   // 가계부 목록 전체 불러오기
@@ -191,7 +190,6 @@ class SqlDiaryCrudRepository {
     ).toList();
   }
 
-
   /* 하루치 목록 불러오기 */
 
   // 하루치 가계부 불러오기
@@ -211,8 +209,7 @@ class SqlDiaryCrudRepository {
   }
 
 
-
-  /* ABC 총 합 불러오기 */
+  /* 총 합 불러오기 */
 
   // A 총합 불러오기
   static Future<String> getTotalMoneyA(String month) async {

@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
         bottomSheetTheme: BottomSheetThemeData(
           dragHandleColor: Colors.orange,
           dragHandleSize: Size(50, 5),
+
         ),
 
       ),

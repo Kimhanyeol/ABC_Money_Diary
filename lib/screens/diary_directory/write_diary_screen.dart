@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
-
+import 'package:abc_money_diary/widgets/category_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -444,10 +444,15 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                   ),
                   Flexible(
                     child: TextField(
+                      onTap: _onTapcategory,
                       controller: _categoryTextEditingController,
+
+                      canRequestFocus: false,
+                      //키보드 안올라오게 만드는 거
+                      keyboardType: TextInputType.none,
+
                       decoration: InputDecoration(
-                        labelText: '분류를 입력하세요',
-                        hintText: 'ex) 식비, 교통비...',
+                        labelText: '분류를 선택하세요',
                         alignLabelWithHint: true,
                         labelStyle: TextStyle(color: Colors.brown.shade200),
                         hintStyle: TextStyle(color: Colors.brown.shade200),
@@ -459,6 +464,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                           horizontal: 5,
                         ),
                       ),
+
                       style: TextStyle(
                         color: Colors.brown,
                         fontSize: 18,
@@ -703,16 +709,33 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
 
   //금액 부분 컨트롤러
   final TextEditingController _moneyTextEditingController =
-  TextEditingController();
+      TextEditingController();
 
   //내용 부분 컨트롤러
   final TextEditingController _contentTextEditingController =
-  TextEditingController();
+      TextEditingController();
 
   //메모 부분 컨트롤러
   final TextEditingController _memoTextEditingController =
-  TextEditingController();
+      TextEditingController();
 
+  void _onTapcategory() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 200,
+          child: CategoryWidget(
+              categoryController: _categoryTextEditingController),
+        );
+      },
+      barrierColor: Colors.transparent,
+      backgroundColor: Colors.black54,
+      isScrollControlled: true,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+    ).then((value) => update());
+  }
 
 }
 
