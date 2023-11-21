@@ -1,4 +1,6 @@
 import 'package:abc_money_diary/repository/sql_database.dart';
+import 'package:abc_money_diary/widgets/pair.dart';
+import 'package:intl/intl.dart';
 
 import '../models/diary_model.dart';
 
@@ -259,7 +261,24 @@ class SqlDiaryCrudRepository {
     return resultToCleanString(str);
   }
 
+  // 카테고리별로 총합 불러오기
+  static Future<List<Pair>> getTotalCategory(String month) async {
+    var db = await SqlDataBase().database;
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+        "SELECT category, SUM(money) FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') GROUP BY category ORDER BY SUM(money)");
 
+    if( maps.isEmpty ) return [];
+
+    List<Pair> list = [];
+    for(int i = 0; i < maps.length; i++){
+      if(maps[i]["SUM(money)"]>50000) {
+        list.add(Pair(maps[i]["category"], maps[i]["SUM(money)"]));
+      }
+    }
+
+    return list;
+  }
 
 
   /* 선택이나 수정, 삭제 등 */
@@ -326,6 +345,20 @@ class SqlDiaryCrudRepository {
 
 
 
+  static String moneyToCleanInt(String str){
+    var temp = str.split('');
+    int Index=0;
+
+    for(int i=0;i<str.length;i++){
+      if(temp[i]=='.' || temp[i]=='}') {
+        Index = i;
+        break;
+      }
+    }
+
+    String result = str.substring(0, Index);
+    return result;
+  }
 
   //돈 깔끔하게 숫자만 있게 만드는 거
   static String resultToCleanString(String str){

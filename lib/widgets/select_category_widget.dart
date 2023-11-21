@@ -1,10 +1,10 @@
 import 'package:abc_money_diary/theme/category.dart';
 import 'package:flutter/material.dart';
 
-class CategoryWidget extends StatelessWidget {
+class SelectCategoryWidget extends StatelessWidget {
   final TextEditingController categoryController;
 
-  const CategoryWidget({super.key, required this.categoryController});
+  const SelectCategoryWidget({super.key, required this.categoryController});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +17,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category1;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -33,6 +34,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category2;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -48,6 +50,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category3;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -63,6 +66,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category4;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -83,6 +87,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category5;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -99,6 +104,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category6;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -115,6 +121,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category7;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -131,6 +138,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category8;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -152,6 +160,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category9;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -168,6 +177,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category10;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -184,6 +194,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category11;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -200,6 +211,7 @@ class CategoryWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 categoryController.text = category12;
+                Navigator.pop(context);
               },
               style: ButtonStyle(
                 backgroundColor:

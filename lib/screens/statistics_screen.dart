@@ -1,6 +1,12 @@
-import 'package:abc_money_diary/bars/main_appbar.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
+import 'package:abc_money_diary/widgets/circle_category_widget.dart';
+import 'package:abc_money_diary/widgets/list_category_widget.dart';
+import 'package:abc_money_diary/widgets/pair.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_holo_date_picker/date_picker.dart';
+import 'package:flutter_holo_date_picker/i18n/date_picker_i18n.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../widgets/total_abc_money.dart';
@@ -13,16 +19,104 @@ class StatisticScreen extends StatefulWidget {
 }
 
 class _StatisticScreenState extends State<StatisticScreen> {
-  String diaryMonth = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  int touchedIndex = -1;
+  late String diaryMonth;
+  DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          //임시
-          MainAppBar(),
+          AppBar(
+            //스테이터스바 투명하게 만드는 부분
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.orange,
+              statusBarIconBrightness: Brightness.light,
+              systemNavigationBarColor: Colors.orange,
+              systemNavigationBarIconBrightness: Brightness.light,
+            ),
+            //앱바 높이
+            toolbarHeight: 70,
+            //글자 색
+            foregroundColor: Colors.white,
+            //앱 바 색
+            backgroundColor: Colors.orange,
+            //앱 바 밑에 음영 사라지게 만드는 코드
+            elevation: 2,
+
+            leadingWidth: double.infinity,
+            leading: Row(
+              children: [
+                IconButton(
+                    onPressed: onTapLeftChevron,
+                    icon: Icon(
+                      Icons.chevron_left_outlined,
+                      color: Colors.white,
+                    )),
+                TextButton(
+                  onPressed: () => DatePicker.showSimpleDatePicker(
+                    context,
+                    initialDate: selectedDate,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2090),
+                    dateFormat: "yyyy년-MMMM",
+                    locale: DateTimePickerLocale.ko,
+                    looping: false,
+                    cancelText: '취소',
+                    confirmText: '확인',
+                  ).then((date) {
+                    if (date != null) {
+                      setState(() {
+                        selectedDate = date;
+                        diaryMonth =
+                            DateFormat('yyyy-MM-dd').format(selectedDate);
+                      });
+                    }
+                  }),
+                  child: Text(
+                    getTimeNow(),
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.white,
+                      fontFamily: "Yeongdeok-Sea",
+                    ),
+                  ),
+                ),
+                IconButton(
+                    onPressed: onTapRightChevron,
+                    icon: Icon(
+                      Icons.chevron_right_outlined,
+                      color: Colors.white,
+                    )),
+              ],
+            ),
+            actions: [
+              IconButton(
+                onPressed: () => Fluttertoast.showToast(
+                  msg: diaryMonth,
+                  gravity: ToastGravity.BOTTOM,
+                  backgroundColor: Colors.redAccent,
+                  fontSize: 20,
+                  textColor: Colors.white,
+                  toastLength: Toast.LENGTH_SHORT,
+                ),
+                icon: Icon(
+                  Icons.question_answer_outlined,
+                  size: 30,
+                  color: Colors.white,
+                ),
+              ),
+              IconButton(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                onPressed: null,
+                icon: Icon(
+                  Icons.help_outline,
+                  size: 30,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
 
           // ABC 항목 별 금액 표시해주는 곳
           TotalAbcMoney(
@@ -34,123 +128,29 @@ class _StatisticScreenState extends State<StatisticScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  SizedBox(height: 1,),
                   //원형 통계부분
-                  Row(
-                    children: [
-                      //원형 그래프 부분
-                      Flexible(
-                        flex: 2,
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: PieChart(
-                            PieChartData(
-                              pieTouchData: PieTouchData(
-                                touchCallback:
-                                    (FlTouchEvent event, pieTouchResponse) {
-                                  setState(() {
-                                    if (!event.isInterestedForInteractions ||
-                                        pieTouchResponse == null ||
-                                        pieTouchResponse.touchedSection ==
-                                            null) {
-                                      touchedIndex = -1;
-                                      return;
-                                    }
-                                    touchedIndex = pieTouchResponse
-                                        .touchedSection!.touchedSectionIndex;
-                                  });
-                                },
-                              ),
-                              borderData: FlBorderData(
-                                show: false,
-                              ),
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 40,
-                              sections: showingSections(),
-                            ),
-                          ),
-                        ),
-                      ),
+                  FutureBuilder(
+                    future: _getTotalCategory(diaryMonth),
+                    initialData: [],
+                    builder: (context, snapshot) {
+                      return CircleCategoryWidget(
+                        categoryMap: categoryMap,
+                        categoryMoney: categoryMoney,
+                      );
+                    },
+                  ),
 
-                      //항목들 색깔로 알려주는 부분
-                      Flexible(
-                        flex: 1,
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                    color: Colors.blue, height: 20, width: 20),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  '카테고리 1',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                      fontFamily: "HakgyoansimWoojuR"),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10,),
-                            Row(
-                              children: [
-                                Container(
-                                    color: Colors.yellow,
-                                    height: 20,
-                                    width: 20),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  '카테고리 2',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                      fontFamily: "HakgyoansimWoojuR"),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10,),
-                            Row(
-                              children: [
-                                Container(
-                                    color: Colors.green, height: 20, width: 20),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  '카테고리 3',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                      fontFamily: "HakgyoansimWoojuR"),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10,),
-                            Row(
-                              children: [
-                                Container(
-                                    color: Colors.purple,
-                                    height: 20,
-                                    width: 20),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  '카테고리 4',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                      fontFamily: "HakgyoansimWoojuR"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  //표 부분
+                  FutureBuilder(
+                    future: _getTotalCategory(diaryMonth),
+                    initialData: [],
+                    builder: (context, snapshot) {
+                      return ListCategoryWidget(
+                        categoryMap: categoryMap,
+                        categoryMoney: categoryMoney,
+                      );
+                    },
                   ),
                 ],
               ),
@@ -161,69 +161,58 @@ class _StatisticScreenState extends State<StatisticScreen> {
     );
   }
 
-  //원형통계 만드는 부분
-  List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
-      final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 25.0 : 16.0;
-      final radius = isTouched ? 60.0 : 50.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: Colors.blue,
-            value: 40,
-            title: '40%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 1:
-          return PieChartSectionData(
-            color: Colors.yellow,
-            value: 30,
-            title: '30%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 2:
-          return PieChartSectionData(
-            color: Colors.purple,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 3:
-          return PieChartSectionData(
-            color: Colors.green,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        default:
-          throw Error();
-      }
-    });
+
+  //setState 간단하게 update로 만들어둔 곳
+  void update() => setState(() {});
+
+  /*-------------------------------------------appbar 관련 부분----------------------------------------------------------------*/
+
+  //왼쪽 화살표
+  void onTapLeftChevron() {
+    selectedDate = DateTime(selectedDate.year, selectedDate.month - 1);
+    diaryMonth = DateFormat('yyyy-MM-dd').format(selectedDate);
+
+    update();
   }
+
+  //오른쪽 화살표
+  void onTapRightChevron() {
+    selectedDate = DateTime(selectedDate.year, selectedDate.month + 1);
+    diaryMonth = DateFormat('yyyy-MM-dd').format(selectedDate);
+    update();
+  }
+
+  //앱바 날짜 바꿀 때 작동하는 부분들
+  String getTimeNow() {
+    diaryMonth = DateFormat('yyyy-MM-dd').format(selectedDate);
+    return DateFormat('yyyy 년 MM 월').format(selectedDate);
+  }
+
+  //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
+  String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
+
+  /*-------------------------------------------appbar 관련 부분----------------------------------------------------------------*/
+
+  /*----------------------------------------------원형 차트 관련 부분-----------------------------------------------------------*/
+
+  List<Pair> categoryMoney = [];
+  Map<String, String> categoryMap = {};
+
+  Future<List<Pair>> _getTotalCategory(String month) async {
+    List<Pair> newList = await SqlDiaryCrudRepository.getTotalCategory(month);
+    categoryMoney = newList;
+    print(categoryMoney.length);
+    print("After sort:---------");
+    for (int i = 0; i < categoryMoney.length; i++) {
+      print("${categoryMoney[i].a} ${categoryMoney[i].b}");
+    }
+    return categoryMoney;
+  }
+
+/*----------------------------------------------원형 차트 관련 부분-----------------------------------------------------------*/
+
+/*----------------------------------------------도표 관련 부분-----------------------------------------------------------*/
+
+
+
 }

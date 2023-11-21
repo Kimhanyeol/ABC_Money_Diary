@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
-import 'package:abc_money_diary/widgets/category_widget.dart';
+import 'package:abc_money_diary/widgets/select_category_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -213,6 +213,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     isSelected = [aButton, bButton, cButton];
     super.initState();
 
+    _moneyTextEditingController.text = '0';
     focusNode.addListener(() {
       setState(() {
         isMoneyFocused = focusNode.hasFocus;
@@ -699,6 +700,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   //돈 깔끔하게 숫자만 있게 만드는 거
   String moneyToCleanString(String money){
     String result = money.replaceAll(',', '');
+    if(result == null) result = '0';
     return result;
   }
 
@@ -725,7 +727,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       builder: (context) {
         return SizedBox(
           height: 200,
-          child: CategoryWidget(
+          child: SelectCategoryWidget(
               categoryController: _categoryTextEditingController),
         );
       },

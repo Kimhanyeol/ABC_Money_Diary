@@ -221,25 +221,6 @@ class _DiaryScreenState extends State<DiaryScreen> {
   String moneyToString(int money) =>
       NumberFormat.decimalPattern('ko_KR').format(money);
 
-  String addMoney(int addVal, String abc) {
-    if (abc == "") {
-      abc = moneyToString(addVal);
-    } else {
-      int newVal = int.parse(abc.replaceAll(',', '')) + addVal;
-      abc = moneyToString(newVal);
-    }
-
-    return abc;
-  }
-
-  int moneyToInt(String money) {
-    if (money == "") {
-      money = "0";
-    }
-    int result = int.parse(money.replaceAll(',', ''));
-    return result;
-  }
-
   //앱바 날짜 바꿀 때 작동하는 부분들
   String getTimeNow() {
     diaryMonth = DateFormat('yyyy-MM-dd').format(selectedDate);

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-import '../../widgets/category_widget.dart';
+import '../../widgets/select_category_widget.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/money_text_field_widget.dart';
 
@@ -731,7 +731,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
       builder: (context) {
         return SizedBox(
           height: 200,
-          child: CategoryWidget(
+          child: SelectCategoryWidget(
               categoryController: _categoryTextEditingController),
         );
       },
