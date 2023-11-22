@@ -29,7 +29,7 @@ class TotalAbcMoney extends StatelessWidget {
     //돈 3글자마다 ',' 넣어주기
     String moneyToCleanString(String money){
       int temp = int.parse(money);
-      String result = NumberFormat.decimalPattern('ko_KR').format(temp);
+      String result = '${NumberFormat.decimalPattern('ko_KR').format(temp)}원';
       return result;
     }
     

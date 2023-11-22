@@ -4,9 +4,9 @@ import 'package:abc_money_diary/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/diary_model.dart';
-import '../repository/sql_diary_crud_repository.dart';
-import '../screens/diary_directory/modify_diary_screen.dart';
+import '../../models/diary_model.dart';
+import '../../repository/sql_diary_crud_repository.dart';
+import 'modify_diary_screen.dart';
 
 class DayDiaryDetailWidget extends StatefulWidget {
   final Diary diary;

@@ -6,7 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../models/diary_model.dart';
 import '../repository/sql_diary_crud_repository.dart';
-import '../widgets/day_diary_widget.dart';
+import 'diary_directory/day_diary_widget.dart';
 import 'diary_directory/write_diary_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -65,7 +65,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
               lastDay: DateTime.timestamp(),
               locale: 'ko-KR',
               daysOfWeekHeight: 20,
-
 
               //다른 달 날짜 선택시 그 달로 이동
               pageJumpingEnabled: true,
@@ -150,6 +149,23 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   if (snapshot.hasError) {
                     return Center(
                       child: Text('Not Support Sqflite'),
+                    );
+                  }
+                  if (snapshot.data!.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('정보가 없습니다', style: TextStyle(fontSize: 15)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Tip) 날짜를 길게 누르면 가계부 작성이 가능합니다',
+                            style: TextStyle(fontSize: 13, color: Colors.grey),
+                          )
+                        ],
+                      ),
                     );
                   }
                   if (snapshot.hasData) {

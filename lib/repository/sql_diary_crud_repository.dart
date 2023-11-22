@@ -1,6 +1,5 @@
 import 'package:abc_money_diary/repository/sql_database.dart';
 import 'package:abc_money_diary/widgets/pair.dart';
-import 'package:intl/intl.dart';
 
 import '../models/diary_model.dart';
 
@@ -118,6 +117,22 @@ class SqlDiaryCrudRepository {
         return Diary.fromJson(data);
       },
     ).toList();
+  }
+
+  // 가계부 있는 날짜 불러오기
+  static Future<List<Pair>> getTotalDate() async {
+    var db = await SqlDataBase().database;
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+        "SELECT ${DiaryFields.date}, ${DiaryFields.type} FROM ${Diary.tableName}");
+
+    if( maps.isEmpty ) return [];
+
+    List<Pair> list = [];
+    for(int i = 0; i < maps.length; i++){
+      list.add(Pair(maps[i]["date"], maps[i]["type"]));
+    }
+
+    return list;
   }
 
 

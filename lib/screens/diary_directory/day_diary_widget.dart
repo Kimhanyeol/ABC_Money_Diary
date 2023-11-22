@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/diary_model.dart';
+import '../../models/diary_model.dart';
 import 'day_diary_detail_widget.dart';
 
 class DayDiaryWidget extends StatefulWidget {

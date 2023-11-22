@@ -1,6 +1,7 @@
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
-import 'package:abc_money_diary/widgets/circle_category_widget.dart';
-import 'package:abc_money_diary/widgets/list_category_widget.dart';
+import 'package:abc_money_diary/screens/statistic_directory/circle_category_screen.dart';
+import 'package:abc_money_diary/screens/statistic_directory/list_category_screen.dart';
+import 'package:abc_money_diary/widgets/none_information_widget.dart';
 import 'package:abc_money_diary/widgets/pair.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_holo_date_picker/i18n/date_picker_i18n.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-import '../widgets/total_abc_money.dart';
+import '../../widgets/total_abc_money.dart';
 
 class StatisticScreen extends StatefulWidget {
   const StatisticScreen({super.key});
@@ -21,6 +22,13 @@ class StatisticScreen extends StatefulWidget {
 class _StatisticScreenState extends State<StatisticScreen> {
   late String diaryMonth;
   DateTime selectedDate = DateTime.now();
+
+  //돈 3글자마다 ',' 넣어주기
+  String moneyToCleanString(String money) {
+    int temp = int.parse(money);
+    String result = '${NumberFormat.decimalPattern('ko_KR').format(temp)}원';
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,30 +136,45 @@ class _StatisticScreenState extends State<StatisticScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: 1,),
+                  SizedBox(
+                    height: 3,
+                  ),
                   //원형 통계부분
                   FutureBuilder(
                     future: _getTotalCategory(diaryMonth),
                     initialData: [],
                     builder: (context, snapshot) {
-                      return CircleCategoryWidget(
+                      if(snapshot.data!.isEmpty){
+                        return NoneInformationWidget();
+                      }
+                      return CircleCategoryScreen(
                         categoryMap: categoryMap,
                         categoryMoney: categoryMoney,
                       );
                     },
                   ),
 
-                  //표 부분
+                  //리스트표 부분
                   FutureBuilder(
                     future: _getTotalCategory(diaryMonth),
                     initialData: [],
                     builder: (context, snapshot) {
-                      return ListCategoryWidget(
-                        categoryMap: categoryMap,
-                        categoryMoney: categoryMoney,
-                      );
+                      if(snapshot.data!.isEmpty){
+                        return NoneInformationWidget();
+                      }
+
+                      var datas = snapshot.data!.reversed.toList();
+                      int sum = 0;
+                      for (int i = 0; i < categoryMoney.length; i++) {
+                        int money = categoryMoney[i].b;
+                        sum += money;
+                      }
+
+                      return ListCategoryScreen(datas: datas ,sum: sum,);
                     },
                   ),
+
+
                 ],
               ),
             ),
@@ -165,7 +188,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
   //setState 간단하게 update로 만들어둔 곳
   void update() => setState(() {});
 
-  /*-------------------------------------------appbar 관련 부분----------------------------------------------------------------*/
+  /*-------------------------------------------appbar 관련 부분 시작----------------------------------------------------------------*/
 
   //왼쪽 화살표
   void onTapLeftChevron() {
@@ -191,9 +214,9 @@ class _StatisticScreenState extends State<StatisticScreen> {
   //돈 입력 시 3자리마다 , 붙여주는 등 관련 설정
   String moneyToString(int money) => NumberFormat.decimalPattern('ko_KR').format(money);
 
-  /*-------------------------------------------appbar 관련 부분----------------------------------------------------------------*/
+  /*-------------------------------------------appbar 관련 부분 끝 끝----------------------------------------------------------------*/
 
-  /*----------------------------------------------원형 차트 관련 부분-----------------------------------------------------------*/
+  /*-----------------------------------------------차트 관련 부분 시작-----------------------------------------------------------*/
 
   List<Pair> categoryMoney = [];
   Map<String, String> categoryMap = {};
@@ -201,17 +224,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
   Future<List<Pair>> _getTotalCategory(String month) async {
     List<Pair> newList = await SqlDiaryCrudRepository.getTotalCategory(month);
     categoryMoney = newList;
-    print(categoryMoney.length);
-    print("After sort:---------");
-    for (int i = 0; i < categoryMoney.length; i++) {
-      print("${categoryMoney[i].a} ${categoryMoney[i].b}");
-    }
     return categoryMoney;
   }
 
-/*----------------------------------------------원형 차트 관련 부분-----------------------------------------------------------*/
+/*---------------------------------------------------차트 관련 부분 끝-----------------------------------------------------------*/
 
-/*----------------------------------------------도표 관련 부분-----------------------------------------------------------*/
 
 
 

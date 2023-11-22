@@ -1,3 +1,5 @@
+//추후 카테고리 추가 기능을 위해 만들어놓은 파일
+
 const category1 = '식비';
 const category2 = '교통/차량';
 const category3 = '문화생활';

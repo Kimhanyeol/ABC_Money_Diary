@@ -11,7 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 
-import '../../widgets/day_diary_widget.dart';
+import 'day_diary_widget.dart';
 import '../../widgets/total_abc_money.dart';
 
 class DiaryScreen extends StatefulWidget {
@@ -136,6 +136,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                     child: Text('Not Support Sqflite'),
                   );
                 }
+
                 if (snapshot.hasData) {
                   var datas = snapshot.data;
                   return GroupedListView(
@@ -167,6 +168,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                     },
                   );
                 }
+
                 else {
                   return Center(
                     child: CircularProgressIndicator(),

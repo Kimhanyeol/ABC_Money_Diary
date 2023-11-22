@@ -2,22 +2,22 @@ import 'package:abc_money_diary/widgets/pair.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../theme/textOutLine.dart';
+import '../../theme/textOutLine.dart';
 
-class CircleCategoryWidget extends StatefulWidget {
+class CircleCategoryScreen extends StatefulWidget {
   final List<Pair> categoryMoney;
   final Map<String, String> categoryMap;
 
-  const CircleCategoryWidget(
+  const CircleCategoryScreen(
       {super.key,
       required this.categoryMoney,
       required this.categoryMap});
 
   @override
-  State<CircleCategoryWidget> createState() => _CircleCategoryWidgetState();
+  State<CircleCategoryScreen> createState() => _CircleCategoryScreenState();
 }
 
-class _CircleCategoryWidgetState extends State<CircleCategoryWidget> {
+class _CircleCategoryScreenState extends State<CircleCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -78,18 +78,17 @@ class _CircleCategoryWidgetState extends State<CircleCategoryWidget> {
     List<PieChartSectionData> list = [];
 
     int sum = 0;
-    int ind = 0;
+    int index = 0;
     for (int i = 0; i < widget.categoryMoney.length; i++) {
       int money = widget.categoryMoney[i].b;
       //if( money > 0 ) break;
       sum += money;
-      ind++;
+      index++;
     }
-    print("Sum: $sum");
 
-    int hop = ind < 5 ? 200 : 100;
+    int hop = index < 5 ? 200 : 100;
 
-    for (int i = 0; i < ind && i < 9; i++) {
+    for (int i = 0; i < index && i < 9; i++) {
       final isTouched = i == touchedIndex;
       final radius = isTouched ? 70.0 : 60.0;
 
@@ -100,12 +99,13 @@ class _CircleCategoryWidgetState extends State<CircleCategoryWidget> {
       //추후 이미지로 바꿀 수도 있음
       String categoryIcon = "*";
 
-      if (widget.categoryMap.containsKey(category))
+      if (widget.categoryMap.containsKey(category)) {
         categoryIcon = widget.categoryMap[category]!;
+      }
 
       list.add(PieChartSectionData(
         //차트 색깔 선택부분인데 맘에 드는 색깔이 없음 흠;;
-        color: Colors.purple[(ind - i) * hop],
+        color: Colors.blue[(index - i) * hop],
         title: '',
         value: per,
         radius: radius,
@@ -117,7 +117,7 @@ class _CircleCategoryWidgetState extends State<CircleCategoryWidget> {
               style: TextStyle(color: Colors.orange),
             ),
           ),
-          backgroundColor: Colors.orange[(ind - i) * hop]!,
+          backgroundColor: Colors.orange[(index - i) * hop]!,
           label: isTouched
               ? TextOutline(
                   text: "$category: ${(per).toStringAsFixed(2)}%",

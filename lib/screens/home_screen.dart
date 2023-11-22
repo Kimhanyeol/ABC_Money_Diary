@@ -1,7 +1,7 @@
 import 'package:abc_money_diary/screens/calendar_screen.dart';
 import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
 import 'package:abc_money_diary/screens/etc_screen.dart';
-import 'package:abc_money_diary/screens/statistics_screen.dart';
+import 'package:abc_money_diary/screens/statistic_directory/statistics_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
