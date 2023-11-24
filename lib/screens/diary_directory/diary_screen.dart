@@ -139,6 +139,26 @@ class _DiaryScreenState extends State<DiaryScreen> {
 
                 if (snapshot.hasData) {
                   var datas = snapshot.data;
+
+                  //가계부 없는 날 나오는 화면
+                  if(datas!.isEmpty){
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('정보가 없습니다', style: TextStyle(fontSize: 15)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Tip) 하단에 + 버튼을 클릭하면 가계부 작성이 가능합니다',
+                            style: TextStyle(fontSize: 13, color: Colors.grey),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                  
                   return GroupedListView(
                     elements: datas!,
                     groupBy: (element) => element.date,

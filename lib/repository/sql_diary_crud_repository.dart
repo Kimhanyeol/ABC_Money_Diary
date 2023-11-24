@@ -119,23 +119,6 @@ class SqlDiaryCrudRepository {
     ).toList();
   }
 
-  // 가계부 있는 날짜 불러오기
-  static Future<List<Pair>> getTotalDate() async {
-    var db = await SqlDataBase().database;
-    List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT ${DiaryFields.date}, ${DiaryFields.type} FROM ${Diary.tableName}");
-
-    if( maps.isEmpty ) return [];
-
-    List<Pair> list = [];
-    for(int i = 0; i < maps.length; i++){
-      list.add(Pair(maps[i]["date"], maps[i]["type"]));
-    }
-
-    return list;
-  }
-
-
 
   /* 한 달치 목록 불러오기 */
 
@@ -276,7 +259,7 @@ class SqlDiaryCrudRepository {
     return resultToCleanString(str);
   }
 
-  // 카테고리별로 총합 불러오기
+  // 카테고리별로 불러오기
   static Future<List<Pair>> getTotalCategory(String month) async {
     var db = await SqlDataBase().database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
@@ -295,6 +278,25 @@ class SqlDiaryCrudRepository {
     return list;
   }
 
+  // ABC,카테고리 별로 불러오기
+  static Future<List<Pair>> getABCcategory(String month,String abc) async {
+    var db = await SqlDataBase().database;
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+        "SELECT category, SUM(money) FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') "
+            "AND ${DiaryFields.type} = '$abc' GROUP BY category ORDER BY SUM(money)");
+
+    if( maps.isEmpty ) return [];
+
+    List<Pair> list = [];
+    for(int i = 0; i < maps.length; i++){
+      if(maps[i]["SUM(money)"]>50000) {
+        list.add(Pair(maps[i]["category"], maps[i]["SUM(money)"]));
+      }
+    }
+
+    return list;
+  }
 
   /* 선택이나 수정, 삭제 등 */
 

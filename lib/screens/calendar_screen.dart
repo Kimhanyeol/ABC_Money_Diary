@@ -62,7 +62,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             TableCalendar(
               focusedDay: focusedDay,
               firstDay: DateTime(2000, 01),
-              lastDay: DateTime.timestamp(),
+              lastDay: DateTime.now(),
               locale: 'ko-KR',
               daysOfWeekHeight: 20,
 
@@ -99,12 +99,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   color: Colors.white,
                 ),
 
-                //이벤트 있는 날짜
-                markerSize: 7,
-                markerDecoration: BoxDecoration(
-                  color: Colors.grey,
-                  shape: BoxShape.circle,
-                ),
               ),
 
               //날짜 선택 기능
@@ -115,9 +109,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 });
               },
 
-              selectedDayPredicate: (DateTime day) {
-                return isSameDay(selectedDay, day);
-              },
+              selectedDayPredicate: (day) => isSameDay(day, selectedDay),
 
               onDayLongPressed: (selectedDay, focusedDay) {
                 setState(() {
@@ -151,25 +143,28 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       child: Text('Not Support Sqflite'),
                     );
                   }
-                  if (snapshot.data!.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('정보가 없습니다', style: TextStyle(fontSize: 15)),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Tip) 날짜를 길게 누르면 가계부 작성이 가능합니다',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          )
-                        ],
-                      ),
-                    );
-                  }
                   if (snapshot.hasData) {
                     var datas = snapshot.data;
+
+                    //가계부 없는 날 나오는 화면
+                    if(datas!.isEmpty){
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('정보가 없습니다', style: TextStyle(fontSize: 15)),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Tip) 날짜를 길게 누르면 가계부 작성이 가능합니다',
+                              style: TextStyle(fontSize: 13, color: Colors.grey),
+                            )
+                          ],
+                        ),
+                      );
+                    }
+
                     return GroupedListView(
                       elements: datas!,
                       groupBy: (element) => element.date,
@@ -199,7 +194,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         );
                       },
                     );
-                  } else {
+                  }
+                  else {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
@@ -210,6 +206,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ],
         ));
   }
+
 
   //하루치 가계부 목록 가져오기
   Future<List<Diary>> _loadDiaryList(DateTime date) async {
