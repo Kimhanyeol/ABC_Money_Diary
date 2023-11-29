@@ -35,9 +35,6 @@ class _AbcListChartCardState extends State<AbcListChartCard> {
       initialData: [],
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data!.isEmpty) {
-            return NoneInformationWidget();
-          }
 
           var datas = snapshot.data!.reversed.toList();
 

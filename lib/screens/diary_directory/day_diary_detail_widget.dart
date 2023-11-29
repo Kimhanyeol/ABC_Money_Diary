@@ -83,6 +83,7 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(widget.diary.type!),
       titleTextStyle: TextStyle(
@@ -92,50 +93,59 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
       //상세내용부분
       content: SizedBox(
         height: 300,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              '금액 : ${moneyToString(widget.diary.money!)} 원',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: "HakgyoansimWoojuR"),
-            ),
-            Divider(
-                color: Colors.grey.shade300, thickness: 2, height: 10),
-            Text(
-              '날짜 : ${widget.diary.date}',
-              style: TextStyle(
-                fontSize: 15,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(height: 10,),
+              Text(
+                '금액 : ${moneyToString(widget.diary.money!)} 원',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: "HakgyoansimWoojuR"),
               ),
-            ),
-            Text(
-              '시간 : ${widget.diary.time}',
-              style: TextStyle(
-                fontSize: 15,
+              Divider(
+                  color: Colors.grey.shade300, thickness: 2, height: 10),
+              SizedBox(height: 20,),
+              Text(
+                '날짜 : ${widget.diary.date}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
               ),
-            ),
-            Text(
-              '분류 : ${widget.diary.category}',
-              style: TextStyle(
-                fontSize: 15,
+              SizedBox(height: 20,),
+              Text(
+                '시간 : ${widget.diary.time}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
               ),
-            ),
-            Text(
-              '내용 : ${widget.diary.contents}',
-              style: TextStyle(
-                fontSize: 15,
+              SizedBox(height: 20,),
+              Text(
+                '분류 : ${widget.diary.category}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
               ),
-            ),
-            Text(
-              '메모 : ${widget.diary.memo}',
-              style: TextStyle(
-                fontSize: 15,
+              SizedBox(height: 20,),
+              Text(
+                '내용 : ${widget.diary.contents}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
               ),
-            ),
-          ],
+              SizedBox(height: 20,),
+              Text(
+                '메모 : ${widget.diary.memo}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+              SizedBox(height: 20,),
+              Image.asset('assets/images/abc_advice.png')
+            ],
+          ),
         ),
       ),
 

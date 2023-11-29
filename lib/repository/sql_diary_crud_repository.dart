@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:abc_money_diary/repository/sql_database.dart';
 import 'package:abc_money_diary/widgets/pair.dart';
 
+import '../models/diary_image_model.dart';
 import '../models/diary_model.dart';
 
 class SqlDiaryCrudRepository {
@@ -401,4 +404,14 @@ class SqlDiaryCrudRepository {
     String result = str.substring(firstIndex, lastIndex);
     return result;
   }
+
+
+
+
+
+
+  /*--------------------------------------------------사진 관련------------------------------------------------------------------*/
+
+
+
 }

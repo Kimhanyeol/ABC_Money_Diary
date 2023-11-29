@@ -1,5 +1,7 @@
-import 'package:abc_money_diary/theme/category.dart';
+
 import 'package:flutter/material.dart';
+
+import '../data/category.dart';
 
 class SelectCategoryWidget extends StatelessWidget {
   final TextEditingController categoryController;

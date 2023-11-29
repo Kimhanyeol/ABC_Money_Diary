@@ -1,3 +1,4 @@
+import 'package:abc_money_diary/widgets/none_information_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -25,7 +26,7 @@ class _ABCListCategoryScreenState extends State<ABCListCategoryScreen> {
         children: [
           //표 리스트
           Expanded(
-            child: ListView(
+            child: widget.datas.isEmpty ? Center(child: Text('정보가 없습니다'),) : ListView(
               physics: widget.datas.length < 4
                   ? NeverScrollableScrollPhysics()
                   : AlwaysScrollableScrollPhysics(),

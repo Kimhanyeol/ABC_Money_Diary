@@ -41,7 +41,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
             //앱바 높이
             toolbarHeight: 70,
             //글자 색
-            foregroundColor: Colors.white,
+            //foregroundColor: Colors.white,
             //앱 바 색
             backgroundColor: Colors.orange,
             //앱 바 밑에 음영 사라지게 만드는 코드

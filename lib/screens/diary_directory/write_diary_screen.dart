@@ -330,7 +330,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
             //날짜 선택하는 부분
             Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              margin: EdgeInsets.fromLTRB(20, 10, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -670,7 +670,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     return isMoneyFocused
         ? Column(
       children: [
-        const SizedBox(height: 10,),
         Row(
           children: [
             CustomButton( onTap: () { addMoney(1000); }, text: "+1천",),
@@ -679,7 +678,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
             CustomButton( onTap: () { addMoney(50000); }, text: "+5만",),
             CustomButton( onTap: () { addMoney(100000); }, text: "+10만",),
           ],
-        )
+        ),
       ],
     )
         : const SizedBox.shrink();

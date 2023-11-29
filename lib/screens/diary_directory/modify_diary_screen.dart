@@ -333,7 +333,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
             //날짜 선택하는 부분
             Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              margin: EdgeInsets.fromLTRB(20, 10, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

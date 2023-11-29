@@ -2,7 +2,8 @@ import 'package:abc_money_diary/widgets/pair.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../theme/textOutLine.dart';
+import '../../data/textOutLine.dart';
+
 
 class CircleCategoryScreen extends StatefulWidget {
   final List<Pair> categoryMoney;
