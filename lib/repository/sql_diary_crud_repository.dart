@@ -1,16 +1,14 @@
-import 'dart:ui';
-
 import 'package:abc_money_diary/repository/sql_database.dart';
 import 'package:abc_money_diary/widgets/pair.dart';
 
-import '../models/diary_image_model.dart';
 import '../models/diary_model.dart';
 
 class SqlDiaryCrudRepository {
 
+  //가계부 만들기
   static Future<Diary> create(Diary diary) async {
     var db = await SqlDataBase().database;
-    var id = await db.insert(Diary.tableName, diary.toJson());
+    var id = await db.insert(tableName, diary.toJson());
     return diary.clone(id: id);
   }
 
@@ -20,7 +18,7 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getList() async {
     var db = await SqlDataBase().database;
     var result = await db.query(
-      Diary.tableName,
+      tableName,
       columns: [
         DiaryFields.id,
         DiaryFields.money,
@@ -30,6 +28,7 @@ class SqlDiaryCrudRepository {
         DiaryFields.category,
         DiaryFields.contents,
         DiaryFields.memo,
+        DiaryFields.picture,
       ],
       orderBy: DiaryFields.time,
     );
@@ -45,7 +44,7 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getListA() async {
     var db = await SqlDataBase().database;
     var result = await db.query(
-      Diary.tableName,
+      tableName,
       columns: [
         DiaryFields.id,
         DiaryFields.money,
@@ -55,6 +54,7 @@ class SqlDiaryCrudRepository {
         DiaryFields.category,
         DiaryFields.contents,
         DiaryFields.memo,
+        DiaryFields.picture,
       ],
       where: '${DiaryFields.type} = ?',
       whereArgs: ['A'],
@@ -72,7 +72,7 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getListB() async {
     var db = await SqlDataBase().database;
     var result = await db.query(
-      Diary.tableName,
+      tableName,
       columns: [
         DiaryFields.id,
         DiaryFields.money,
@@ -82,6 +82,7 @@ class SqlDiaryCrudRepository {
         DiaryFields.category,
         DiaryFields.contents,
         DiaryFields.memo,
+        DiaryFields.picture,
       ],
       where: '${DiaryFields.type} = ?',
       whereArgs: ['B'],
@@ -99,7 +100,7 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getListC() async {
     var db = await SqlDataBase().database;
     var result = await db.query(
-      Diary.tableName,
+      tableName,
       columns: [
         DiaryFields.id,
         DiaryFields.money,
@@ -109,6 +110,7 @@ class SqlDiaryCrudRepository {
         DiaryFields.category,
         DiaryFields.contents,
         DiaryFields.memo,
+        DiaryFields.picture,
       ],
       where: '${DiaryFields.type} = ?',
       whereArgs: ['C'],
@@ -129,11 +131,10 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getMonthList(String month) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime')"
-            "ORDER BY ${DiaryFields.time} ;",
-        null
-    );
+        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime')"
+        "ORDER BY ${DiaryFields.time} ;",
+        null);
 
     return result.map(
           (data) {
@@ -146,11 +147,10 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getMonthListA(String month) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'A'"
-            "ORDER BY ${DiaryFields.time} ;",
-        null
-    );
+        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'A'"
+        "ORDER BY ${DiaryFields.time} ;",
+        null);
 
     return result.map(
           (data) {
@@ -163,11 +163,10 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getMonthListB(String month) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'B'"
-            "ORDER BY ${DiaryFields.time} ;",
-        null
-    );
+        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'B'"
+        "ORDER BY ${DiaryFields.time} ;",
+        null);
 
     return result.map(
           (data) {
@@ -180,11 +179,10 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getMonthListC(String month) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'C'"
-            "ORDER BY ${DiaryFields.time} ;",
-        null
-    );
+        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'C'"
+        "ORDER BY ${DiaryFields.time} ;",
+        null);
 
     return result.map(
           (data) {
@@ -199,10 +197,9 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getDayList(String date) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$date', 'localtime') "
-            " AND ${DiaryFields.date} <= date('$date', 'localtime', '+1 days') ORDER BY ${DiaryFields.time} ;",
-        null
-    );
+        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$date', 'localtime') "
+        " AND ${DiaryFields.date} <= date('$date', 'localtime', '+1 days') ORDER BY ${DiaryFields.time} ;",
+        null);
 
     return result.map(
           (data) {
@@ -218,12 +215,12 @@ class SqlDiaryCrudRepository {
   static Future<String> getTotalMoneyA(String month) async {
     var db = await SqlDataBase().database;
     var results = await db.rawQuery(
-        "SELECT SUM(${DiaryFields.money}) FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'A' ");
+        "SELECT SUM(${DiaryFields.money}) FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'A' ");
 
     String str = results.toString();
 
-    if(str.contains('null')) {
+    if (str.contains('null')) {
       return '0';
     }
 
@@ -234,12 +231,12 @@ class SqlDiaryCrudRepository {
   static Future<String> getTotalMoneyB(String month) async {
     var db = await SqlDataBase().database;
     var results = await db.rawQuery(
-        "SELECT SUM(${DiaryFields.money}) as sum FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'B' ");
+        "SELECT SUM(${DiaryFields.money}) as sum FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'B' ");
 
     String str = results.toString();
 
-    if(str.contains('null')) {
+    if (str.contains('null')) {
       return '0';
     }
 
@@ -250,12 +247,12 @@ class SqlDiaryCrudRepository {
   static Future<String> getTotalMoneyC(String month) async {
     var db = await SqlDataBase().database;
     var results = await db.rawQuery(
-        "SELECT SUM(${DiaryFields.money}) as sum FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'C' ");
+        "SELECT SUM(${DiaryFields.money}) as sum FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'C' ");
 
     String str = results.toString();
 
-    if(str.contains('null')) {
+    if (str.contains('null')) {
       return '0';
     }
 
@@ -266,16 +263,14 @@ class SqlDiaryCrudRepository {
   static Future<List<Pair>> getTotalCategory(String month) async {
     var db = await SqlDataBase().database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT category, SUM(money) FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') GROUP BY category ORDER BY SUM(money)");
+        "SELECT category, SUM(money) FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') GROUP BY category ORDER BY SUM(money)");
 
-    if( maps.isEmpty ) return [];
+    if (maps.isEmpty) return [];
 
     List<Pair> list = [];
-    for(int i = 0; i < maps.length; i++){
-      if(maps[i]["SUM(money)"]>50000) {
-        list.add(Pair(maps[i]["category"], maps[i]["SUM(money)"]));
-      }
+    for (int i = 0; i < maps.length; i++) {
+      list.add(Pair(maps[i]["category"], maps[i]["SUM(money)"]));
     }
 
     return list;
@@ -285,17 +280,15 @@ class SqlDiaryCrudRepository {
   static Future<List<Pair>> getABCcategory(String month,String abc) async {
     var db = await SqlDataBase().database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT category, SUM(money) FROM ${Diary.tableName} WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-            "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') "
-            "AND ${DiaryFields.type} = '$abc' GROUP BY category ORDER BY SUM(money)");
+        "SELECT category, SUM(money) FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
+        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') "
+        "AND ${DiaryFields.type} = '$abc' GROUP BY category ORDER BY SUM(money)");
 
-    if( maps.isEmpty ) return [];
+    if (maps.isEmpty) return [];
 
     List<Pair> list = [];
-    for(int i = 0; i < maps.length; i++){
-      if(maps[i]["SUM(money)"]>50000) {
-        list.add(Pair(maps[i]["category"], maps[i]["SUM(money)"]));
-      }
+    for (int i = 0; i < maps.length; i++) {
+      list.add(Pair(maps[i]["category"], maps[i]["SUM(money)"]));
     }
 
     return list;
@@ -307,7 +300,7 @@ class SqlDiaryCrudRepository {
   static Future<Diary?> getDiaryOne(int id) async {
     var db = await SqlDataBase().database;
     var result = await db.query(
-      Diary.tableName,
+      tableName,
       columns: [
         DiaryFields.category,
         DiaryFields.contents,
@@ -317,6 +310,7 @@ class SqlDiaryCrudRepository {
         DiaryFields.money,
         DiaryFields.time,
         DiaryFields.type,
+        DiaryFields.picture,
       ],
       where: '${DiaryFields.id} = ?',
       whereArgs: [id],
@@ -338,7 +332,7 @@ class SqlDiaryCrudRepository {
   static Future<int> update(Diary diary) async {
     var db = await SqlDataBase().database;
     return await db.update(
-      Diary.tableName,
+      tableName,
       diary.toJson(),
       where: '${DiaryFields.id}=?',
       whereArgs: [diary.id],
@@ -349,7 +343,7 @@ class SqlDiaryCrudRepository {
   static Future<int> delete(int id) async {
     var db = await SqlDataBase().database;
     return await db.delete(
-      Diary.tableName,
+      tableName,
       where: '${DiaryFields.id}=?',
       whereArgs: [id],
     );
@@ -359,7 +353,7 @@ class SqlDiaryCrudRepository {
   static Future<int> deleteAll() async {
     var db = await SqlDataBase().database;
     return await db.delete(
-      Diary.tableName,
+      tableName,
     );
   }
 
@@ -404,14 +398,6 @@ class SqlDiaryCrudRepository {
     String result = str.substring(firstIndex, lastIndex);
     return result;
   }
-
-
-
-
-
-
-  /*--------------------------------------------------사진 관련------------------------------------------------------------------*/
-
 
 
 }

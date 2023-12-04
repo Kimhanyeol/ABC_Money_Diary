@@ -1,12 +1,18 @@
-
 import 'package:flutter/material.dart';
 
 import '../data/category.dart';
 
-class SelectCategoryWidget extends StatelessWidget {
+class SelectCategoryWidget extends StatefulWidget {
   final TextEditingController categoryController;
 
   const SelectCategoryWidget({super.key, required this.categoryController});
+
+  @override
+  State<SelectCategoryWidget> createState() => _SelectCategoryWidgetState();
+}
+
+class _SelectCategoryWidgetState extends State<SelectCategoryWidget> {
+  String inputText='';
 
   @override
   Widget build(BuildContext context) {
@@ -18,67 +24,66 @@ class SelectCategoryWidget extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                categoryController.text = category1;
+                widget.categoryController.text = category1;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
               ),
               child: Text(
                 category1,
                 style: TextStyle(
                     color: Colors.black,
                     fontFamily: "Yeongdeok-Sea",
-                fontSize: 15),
+                    fontSize: 15),
               ),
             ),
             TextButton(
               onPressed: () {
-                categoryController.text = category2;
+                widget.categoryController.text = category2;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
               ),
               child: Text(
                 category2,
                 style: TextStyle(
                     color: Colors.black,
-                    fontFamily: "Yeongdeok-Sea",fontSize: 15),
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
               ),
             ),
             TextButton(
               onPressed: () {
-                categoryController.text = category3;
+                widget.categoryController.text = category3;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
               ),
               child: Text(
                 category3,
                 style: TextStyle(
                     color: Colors.black,
-                    fontFamily: "Yeongdeok-Sea",fontSize: 15),
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
               ),
             ),
             TextButton(
               onPressed: () {
-                categoryController.text = category4;
+                widget.categoryController.text = category4;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
               ),
               child: Text(
                 category4,
                 style: TextStyle(
                     color: Colors.black,
-                    fontFamily: "Yeongdeok-Sea",fontSize: 15),
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
               ),
             ),
           ],
@@ -88,12 +93,11 @@ class SelectCategoryWidget extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                categoryController.text = category5;
+                widget.categoryController.text = category5;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
               ),
               child: Text(
                 category5,
@@ -105,12 +109,11 @@ class SelectCategoryWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                categoryController.text = category6;
+                widget.categoryController.text = category6;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
               ),
               child: Text(
                 category6,
@@ -122,12 +125,11 @@ class SelectCategoryWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                categoryController.text = category7;
+                widget.categoryController.text = category7;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
               ),
               child: Text(
                 category7,
@@ -139,12 +141,11 @@ class SelectCategoryWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                categoryController.text = category8;
+                widget.categoryController.text = category8;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
               ),
               child: Text(
                 category8,
@@ -161,12 +162,11 @@ class SelectCategoryWidget extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                categoryController.text = category9;
+                widget.categoryController.text = category9;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
               ),
               child: Text(
                 category9,
@@ -178,12 +178,11 @@ class SelectCategoryWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                categoryController.text = category10;
+                widget.categoryController.text = category10;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
               ),
               child: Text(
                 category10,
@@ -195,12 +194,11 @@ class SelectCategoryWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                categoryController.text = category11;
+                widget.categoryController.text = category11;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
               ),
               child: Text(
                 category11,
@@ -212,12 +210,11 @@ class SelectCategoryWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                categoryController.text = category12;
+                widget.categoryController.text = category12;
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
               ),
               child: Text(
                 category12,
@@ -229,7 +226,78 @@ class SelectCategoryWidget extends StatelessWidget {
             ),
           ],
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () {
+                widget.categoryController.text = category13;
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
+              ),
+              child: Text(
+                category13,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                widget.categoryController.text = category14;
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
+              ),
+              child: Text(
+                category14,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                widget.categoryController.text = category15;
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
+              ),
+              child: Text(
+                category15,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                widget.categoryController.text = category16;
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
+              ),
+              child: Text(
+                category16,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
+
+
 }

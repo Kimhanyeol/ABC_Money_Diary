@@ -29,7 +29,7 @@ class SqlDataBase {
 
   void _databaseCreate(Database db, int version) async {
     await db.execute('''
-          create table ${Diary.tableName}(
+          create table $tableName(
             ${DiaryFields.id} integer primary key autoincrement,
             ${DiaryFields.type} text not null,
             ${DiaryFields.date} text not null,
@@ -37,9 +37,10 @@ class SqlDataBase {
             ${DiaryFields.category} text,
             ${DiaryFields.money} text not null,
             ${DiaryFields.contents} text,
-            ${DiaryFields.memo} text
-          )
-        ''');
+            ${DiaryFields.memo} text,
+            ${DiaryFields.picture} text
+            )'''
+    );
   }
 
   void closeDataBase() async {

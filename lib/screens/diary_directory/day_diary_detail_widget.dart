@@ -1,5 +1,7 @@
 //날짜별 가계부 목록 작게 보여주는 것들
 
+import 'dart:convert';
+
 import 'package:abc_money_diary/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -30,7 +32,7 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
       context: context,
       builder: (context) {
         return SizedBox(
-          height: 635,
+          height: 600,
           child: ModifyDiaryScreen(
             diary: widget.diary,
           ),
@@ -129,21 +131,58 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
                 ),
               ),
               SizedBox(height: 20,),
-              Text(
-                '내용 : ${widget.diary.contents}',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '내용 : ',
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${widget.diary.contents}',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+
+                ],
               ),
-              SizedBox(height: 20,),
-              Text(
-                '메모 : ${widget.diary.memo}',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
+              SizedBox(
+                height: 20,
               ),
-              SizedBox(height: 20,),
-              Image.asset('assets/images/abc_advice.png')
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '메모 : ',
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${widget.diary.memo}',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+
+              //사진 넣을곳
+              widget.diary.picture == ''
+                  ? SizedBox()
+                  : Image.memory(
+                      base64Decode(widget.diary.picture!),
+                    ),
             ],
           ),
         ),
@@ -184,5 +223,4 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
     String result = NumberFormat.decimalPattern('ko_KR').format(temp);
     return result;
   }
-  
 }

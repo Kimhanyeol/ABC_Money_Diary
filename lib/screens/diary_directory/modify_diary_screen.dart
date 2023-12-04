@@ -1,5 +1,6 @@
 //가계부 수정하는 화면
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:abc_money_diary/models/diary_model.dart';
@@ -62,6 +63,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
       contents: _contentTextEditingController.text,
       category: _categoryTextEditingController.text,
       memo: _memoTextEditingController.text,
+      picture: base64Image,
     );
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false);
     await SqlDiaryCrudRepository.update(modifyDiary);
@@ -211,6 +213,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
 
   final ImagePicker picker = ImagePicker();
   XFile? _image; // 카메라로 촬영한 이미지를 저장할 변수
+  String? base64Image;
 
   //금액 부분 관련
   bool isMoneyFocused = false;
@@ -332,16 +335,72 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
 
             //날짜 선택하는 부분
             Container(
-              alignment: Alignment.center,
               margin: EdgeInsets.fromLTRB(20, 10, 0, 0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    child: Row(
+                  Row(
+                    children: [
+                      Text(
+                        '날짜',
+                        style: TextStyle(
+                          fontFamily: "HakgyoansimWoojuR",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 25,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                    ],
+                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+
+                      //날짜선택
+                      TextButton(
+                        onPressed: () => onTapDateButton(context),
+                        child: Text(
+                          getToday(),
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.brown,
+                          ),
+                        ),
+                      ),
+
+                      //시간선택
+                      TextButton(
+                        onPressed: () => onTapTimeButton(context),
+                        child: Text(
+                          getTimeNow(),
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.brown,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                ],
+              ),
+            ),
+
+            //금액 입력하는 부분
+            AnimatedContainer(
+
+              margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+              height: isMoneyFocused ? 120 : 50,
+              duration: const Duration(milliseconds: 300),
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
                         Text(
-                          '날짜',
+                          '금액',
                           style: TextStyle(
                             fontFamily: "HakgyoansimWoojuR",
                             fontWeight: FontWeight.w600,
@@ -350,73 +409,12 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                           ),
                         ),
                         Icon(Icons.chevron_right_rounded, color: Colors.grey),
-                      ],
-                    ),
-                  ),
-
-                  //날짜선택
-                  TextButton(
-                    onPressed: () => onTapDateButton(context),
-                    child: Text(
-                      getToday(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.brown,
-                      ),
-                    ),
-                  ),
-
-                  //시간선택
-                  TextButton(
-                    onPressed: () => onTapTimeButton(context),
-                    child: Text(
-                      getTimeNow(),
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.brown,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-
-            //금액 입력하는 부분
-            AnimatedContainer(
-              alignment: Alignment.center,
-              margin: EdgeInsets.fromLTRB(20, 5, 20, 10),
-              height: isMoneyFocused ? 100 : 50,
-              duration: const Duration(milliseconds: 300),
-              child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          child: Row(
-                            children: [
-                              Text(
-                                '금액',
-                                style: TextStyle(
-                                  fontFamily: "HakgyoansimWoojuR",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 25,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                              Icon(Icons.chevron_right_rounded, color: Colors.grey),
-                            ],
-                          ),
-                        ),
                         Expanded(
-                          child: MoneyTextField(
-                            controller: _moneyTextEditingController,
-                            focusNode: focusNode,
-                          ),
+                          child: Container(
+                              margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                              child: MoneyTextField(
+                                  controller: _moneyTextEditingController,
+                                  focusNode: focusNode)),
                         ),
                       ],
                     ),
@@ -428,55 +426,49 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
 
             //분류 선택하는 부분
             Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  SizedBox(
-                    child: Row(
-                      children: [
-                        Text(
-                          '분류',
-                          style: TextStyle(
-                            fontFamily: "HakgyoansimWoojuR",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 25,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                        Icon(Icons.chevron_right_rounded, color: Colors.grey),
-                      ],
+                  Text(
+                    '분류',
+                    style: TextStyle(
+                      fontFamily: "HakgyoansimWoojuR",
+                      fontWeight: FontWeight.w600,
+                      fontSize: 25,
+                      color: Colors.grey.shade600,
                     ),
                   ),
-                  Flexible(
-                    child: TextField(
-                      onTap: _onTapcategory,
-                      controller: _categoryTextEditingController,
+                  Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                      child: TextField(
+                        onTap: _onTapcategory,
+                        controller: _categoryTextEditingController,
 
-                      canRequestFocus: false,
-                      //키보드 안올라오게 만드는 거
-                      keyboardType: TextInputType.none,
+                        canRequestFocus: false,
+                        //키보드 안올라오게 만드는 거
+                        keyboardType: TextInputType.none,
 
-                      decoration: InputDecoration(
-                        labelText: '분류를 선택하세요',
-                        alignLabelWithHint: true,
-                        labelStyle: TextStyle(color: Colors.brown.shade200),
-                        hintStyle: TextStyle(color: Colors.brown.shade200),
+                        decoration: InputDecoration(
+                          labelText: '분류를 선택하세요',
+                          alignLabelWithHint: true,
+                          labelStyle: TextStyle(color: Colors.brown.shade200),
+                          hintStyle: TextStyle(color: Colors.brown.shade200),
 
-                        //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 0,
-                          horizontal: 5,
+                          //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 5,
+                          ),
                         ),
-                      ),
 
-                      style: TextStyle(
-                        color: Colors.brown,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                        style: TextStyle(
+                          color: Colors.brown,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -486,60 +478,53 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
 
             //내용 입력하는 부분
             Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.fromLTRB(20, 10, 20, 30),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    child: Row(
-                      children: [
-                        Text(
-                          '내용',
-                          style: TextStyle(
-                            fontFamily: "HakgyoansimWoojuR",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 25,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                        Icon(Icons.chevron_right_rounded, color: Colors.grey),
-                      ],
+                  Text(
+                    '내용',
+                    style: TextStyle(
+                      fontFamily: "HakgyoansimWoojuR",
+                      fontWeight: FontWeight.w600,
+                      fontSize: 25,
+                      color: Colors.grey.shade600,
                     ),
                   ),
-                  Flexible(
-                    child: TextField(
-                      controller: _contentTextEditingController,
-                      decoration: InputDecoration(
-                        labelText: '내용을 입력하세요',
-                        hintText: 'ex) 점심 값, 군것질...',
-                        alignLabelWithHint: true,
-                        labelStyle: TextStyle(color: Colors.brown.shade200),
-                        hintStyle: TextStyle(color: Colors.brown.shade200),
+                  Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                      child: TextField(
+                        controller: _contentTextEditingController,
+                        decoration: InputDecoration(
+                          labelText: '내용을 입력하세요',
+                          hintText: 'ex) 점심 값, 군것질...',
+                          alignLabelWithHint: true,
+                          labelStyle: TextStyle(color: Colors.brown.shade200),
+                          hintStyle: TextStyle(color: Colors.brown.shade200),
 
-                        //한 번에 내용 삭제 하는 아이콘(suffixIcon이 오른쪽)
-                        suffixIcon: GestureDetector(
-                          onTap: () => _contentTextEditingController.clear(),
-                          child: Icon(
-                            Icons.cancel,
+                          //한 번에 내용 삭제 하는 아이콘(suffixIcon이 오른쪽)
+                          suffixIcon: GestureDetector(
+                            onTap: () => _contentTextEditingController.clear(),
+                            child: Icon(
+                              Icons.cancel,
+                            ),
+                          ),
+
+                          isDense: true,
+
+                          //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 5,
                           ),
                         ),
-
-                        //텍스트 필드 내에 여백이 싹 사라짐
-                        //isCollapsed: true,
-
-                        //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 0,
-                          horizontal: 5,
+                        style: TextStyle(
+                          color: Colors.brown,
+                          fontSize: 18,
                         ),
-                      ),
-                      style: TextStyle(
-                        color: Colors.brown,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -619,7 +604,6 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                       style: TextStyle(
                         color: Colors.brown,
                         fontSize: 18,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -666,21 +650,26 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
 
   //사진 보여주는 영역
   Widget _buildPhotoArea() {
-    return _image != null
-        ? Container(
-            color: Colors.grey,
-            width: 300,
-            height: 300,
-            child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드
-          )
-        : SizedBox();
+    if(_image != null ){
+      final bytes = File(_image!.path).readAsBytesSync();
+      base64Image =  base64Encode(bytes);
+      return Container(
+        color: Colors.grey,
+        width: 300,
+        height: 300,
+        child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드
+      );
+    }
+    else {
+      base64Image = '';
+      return SizedBox();
+    }
   }
 
   Widget makeButtons(){
     return isMoneyFocused
         ? Column(
       children: [
-        const SizedBox(height: 10,),
         Row(
           children: [
             CustomButton( onTap: () { addMoney(1000); }, text: "+1천",),
@@ -730,16 +719,16 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
       context: context,
       builder: (context) {
         return SizedBox(
-          height: 200,
+          height: 250,
           child: SelectCategoryWidget(
               categoryController: _categoryTextEditingController),
         );
       },
       barrierColor: Colors.transparent,
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.white,
       isScrollControlled: true,
-      showDragHandle: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+      showDragHandle: false,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
     ).then((value) => update());
   }
 

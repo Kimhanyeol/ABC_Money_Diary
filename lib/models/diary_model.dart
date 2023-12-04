@@ -1,3 +1,5 @@
+const String tableName = 'Diary';
+
 class DiaryFields {
   static const String id = '_id';
   static const String type = 'type';
@@ -7,10 +9,10 @@ class DiaryFields {
   static const String money = 'money';
   static const String contents = 'contents';
   static const String memo = 'memo';
+  static const String picture = 'picture';
 }
 
 class Diary {
-  static String tableName = 'Diary';
   final int? id;
   final String? type;
   final String? date;
@@ -19,6 +21,7 @@ class Diary {
   final String? money;
   final String? contents;
   final String? memo;
+  final String? picture;
 
   const Diary({
     this.id,
@@ -29,6 +32,7 @@ class Diary {
     this.money,
     this.contents,
     this.memo,
+    this.picture,
   });
 
   Map<String, dynamic> toJson() {
@@ -41,6 +45,7 @@ class Diary {
       DiaryFields.money: money,
       DiaryFields.contents: contents,
       DiaryFields.memo: memo,
+      DiaryFields.picture: picture,
     };
   }
 
@@ -68,6 +73,9 @@ class Diary {
       memo: json[DiaryFields.memo] == null
           ? ''
           : json[DiaryFields.memo] as String,
+      picture: json[DiaryFields.picture] == null
+          ? ''
+          : json[DiaryFields.picture] as String,
     );
   }
 
@@ -80,15 +88,18 @@ class Diary {
     String? money,
     String? contents,
     String? memo,
+    String? picture,
   }) {
     return Diary(
-        type: type ?? this.type,
-        date: date ?? this.date,
-        time: time ?? this.time,
-        money: money ?? this.money,
-        id: id ?? this.id,
-        memo: memo ?? this.memo,
-        category: category ?? this.category,
-        contents: contents ?? this.contents);
+      type: type ?? this.type,
+      date: date ?? this.date,
+      time: time ?? this.time,
+      money: money ?? this.money,
+      id: id ?? this.id,
+      memo: memo ?? this.memo,
+      category: category ?? this.category,
+      contents: contents ?? this.contents,
+      picture: picture ?? this.picture,
+    );
   }
 }

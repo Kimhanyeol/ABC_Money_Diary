@@ -4,69 +4,49 @@ import 'package:flutter/material.dart';
 
 import '../../data/textOutLine.dart';
 
-
-class CircleCategoryScreen extends StatefulWidget {
+class AbcCircleCategoryScreen extends StatefulWidget {
   final List<Pair> categoryMoney;
   final Map<String, String> categoryMap;
+  final int index;
 
-  const CircleCategoryScreen(
+  const AbcCircleCategoryScreen(
       {super.key,
       required this.categoryMoney,
-      required this.categoryMap});
+      required this.categoryMap,
+      required this.index});
 
   @override
-  State<CircleCategoryScreen> createState() => _CircleCategoryScreenState();
+  State<AbcCircleCategoryScreen> createState() =>
+      _AbcCircleCategoryScreenState();
 }
 
-class _CircleCategoryScreenState extends State<CircleCategoryScreen> {
+class _AbcCircleCategoryScreenState extends State<AbcCircleCategoryScreen> {
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Card(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              "Circular Chart",
-              style: TextStyle(
-                  fontSize: 25,
-                  color: Colors.orange,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Yeongdeok-Sea"),
-            ),
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: PieChart(
-                  PieChartData(
-                      pieTouchData: PieTouchData(touchCallback:
-                          (FlTouchEvent event, pieTouchResponse) {
-                        setState(() {
-                          if (!event.isInterestedForInteractions ||
-                              pieTouchResponse == null ||
-                              pieTouchResponse.touchedSection == null) {
-                            touchedIndex = -1;
-                            return;
-                          }
-                          touchedIndex = pieTouchResponse
-                              .touchedSection!.touchedSectionIndex;
-                        });
-                      }),
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      sectionsSpace: 5,
-                      centerSpaceRadius: 50,
-                      sections: showingSections()),
-                ),
+    return Expanded(
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: PieChart(
+          PieChartData(
+              pieTouchData: PieTouchData(
+                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                setState(() {
+                  if (!event.isInterestedForInteractions ||
+                      pieTouchResponse == null ||
+                      pieTouchResponse.touchedSection == null) {
+                    touchedIndex = -1;
+                    return;
+                  }
+                  touchedIndex =
+                      pieTouchResponse.touchedSection!.touchedSectionIndex;
+                });
+              }),
+              borderData: FlBorderData(
+                show: false,
               ),
-            ),
-          ],
+              sectionsSpace: 5,
+              centerSpaceRadius: 50,
+              sections: showingSections()),
         ),
       ),
     );
@@ -106,7 +86,11 @@ class _CircleCategoryScreenState extends State<CircleCategoryScreen> {
 
       list.add(PieChartSectionData(
         //차트 색깔 선택부분인데 맘에 드는 색깔이 없음 흠;;
-        color: Colors.teal[(index - i) * hop],
+        color: widget.index == 0
+            ? Colors.blue[(index - i) * hop]
+            : widget.index == 1
+                ? Colors.orange[(index - i) * hop]
+                : Colors.red[(index - i) * hop],
         title: '',
         value: per,
         radius: radius,

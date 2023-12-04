@@ -3,16 +3,16 @@
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
 import 'package:abc_money_diary/screens/diary_directory/write_diary_screen.dart';
+import 'package:abc_money_diary/widgets/description_diary_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_holo_date_picker/date_picker.dart';
 import 'package:flutter_holo_date_picker/i18n/date_picker_i18n.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 
-import 'day_diary_widget.dart';
 import '../../widgets/total_abc_money.dart';
+import 'day_diary_widget.dart';
 
 class DiaryScreen extends StatefulWidget {
   const DiaryScreen({super.key});
@@ -48,6 +48,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
             elevation: 2,
 
             leadingWidth: double.infinity,
+
             leading: Row(
               children: [
                 IconButton(
@@ -95,23 +96,16 @@ class _DiaryScreenState extends State<DiaryScreen> {
             ),
             actions: [
               IconButton(
-                onPressed: () => Fluttertoast.showToast(
-                  msg: diaryMonth,
-                  gravity: ToastGravity.BOTTOM,
-                  backgroundColor: Colors.redAccent,
-                  fontSize: 20,
-                  textColor: Colors.white,
-                  toastLength: Toast.LENGTH_SHORT,
-                ),
-                icon: Icon(
-                  Icons.question_answer_outlined,
-                  size: 30,
-                  color: Colors.white,
-                ),
-              ),
-              IconButton(
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                onPressed: null,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('ABC 가계부 알아보기',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold, fontFamily: "Soyo")),
+                      content: DescriptionDiary(),
+                    ),
+                  );
+                },
                 icon: Icon(
                   Icons.help_outline,
                   size: 30,
@@ -213,6 +207,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
     );
   }
 
+
+
   //setState 간단하게 update로 만들어둔 곳
   void update() => setState(() {});
 
@@ -223,7 +219,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
       context: context,
       builder: (context) {
         return SizedBox(
-          height: 635,
+          height: 600,
           child: WriteDiaryScreen(),
         );
       },
@@ -261,5 +257,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
     diaryMonth = DateFormat('yyyy-MM-dd').format(selectedDate);
     update();
   }
+
+  void onTapDescription() {}
 }
 

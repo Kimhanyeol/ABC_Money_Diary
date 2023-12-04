@@ -47,6 +47,9 @@ dependencies:
   fluttertoast: ^8.2.2
   flutter_holo_date_picker: ^1.1.3
   fl_chart: ^0.64.0
+  image_cropper: ^5.0.1
+  flutter_localizations:
+    sdk: flutter
 
 
 
@@ -83,6 +86,9 @@ flutter:
     - assets/images/image7.jpg
     - assets/images/image8.jpg
     - assets/images/image9.jpg
+    - assets/images/image10.jpg
+    - assets/images/image11.jpg
+    - assets/images/image12.jpg
     - assets/images/abc_advice.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -112,6 +118,10 @@ flutter:
     - family: Jeongnimsaji-R
       fonts:
         - asset: assets/fonts/Jeongnimsaji-R.ttf
+
+    - family: Soyo
+      fonts:
+        - asset: assets/fonts/SOYO Maple Regular.ttf
 
 
 

@@ -72,6 +72,13 @@ class Advice extends StatelessWidget {
           Text(source9, style: TextStyle(fontSize: 11, color: Colors.white70)),
         ],
       );
+      case 10 : return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(advice10, style: TextStyle(fontFamily: "Jeongnimsaji-R", fontSize: 17, color: Colors.white,)),
+          Text(source10, style: TextStyle(fontSize: 11, color: Colors.white70)),
+        ],
+      );
     }
 
     return Text('동기부여 페이지');
@@ -120,5 +127,9 @@ const source8 = '박종기, 『젊은 부자』, 청림출판(2013),  p166';
 const advice9 = '"나 자신에게 투자해 수입을 올리는 거지. 하지만 이것은 막연한 자기계발하고는 달라. '
     '\n\n대부분 자기계발 한답시고 운동하고 책 읽고 영어 공부하지만 그런 것은 특별한 목적이 없다고 할 수 있어. '
     '\n\n운동하니까 건강해지고 책을 읽으니까 견문이 넓어지고 그리고 영어를 배우니까 영어 실력이 나아질 뿐이지. '
-    '\n\n내가 말하는 파이프라인은 목적이 분명해. 오로지\'추가소득\'을 만들어내기 위한 것이지. 추가 소득을 위한 자기계발이라고 볼 수 있어"';
+    '\n\n내가 말하는 파이프라인은 목적이 분명해. 오로지 \'추가소득\'을 만들어내기 위한 것이지. 추가소득을 위한 자기계발이라고 볼 수 있어"';
 const source9 = '박종기, 『젊은 부자』, 청림출판(2013),  p159';
+
+const advice10 = '"쓸 거 다 쓰고, 놀 거 다 놀고, \n할 거 다 하면서 부자가 된 사람은 \n아무도 없습니다"';
+const source10 = '박종기, 『젊은 부자』, 청림출판(2013),  p74';
+

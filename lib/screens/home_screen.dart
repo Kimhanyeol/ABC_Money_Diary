@@ -15,8 +15,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
 
+  //뒤로가기 두 번 눌러 화면종료하기 관련
   DateTime? currentBackPressTime;
-  Future<bool> onWillPop() {
+  bool canPop = false;
+  void willPop(dynamic) {
     DateTime now = DateTime.now();
 
     if (currentBackPressTime == null ||
@@ -32,17 +34,22 @@ class _HomeScreenState extends State<HomeScreen> {
         textColor: Colors.white,
         toastLength: Toast.LENGTH_SHORT,
       );
-      return Future.value(false);
-    }
 
-    return Future.value(true);
+      setState(() {
+        canPop = false;
+      });
+    }
+    setState(() {
+      canPop = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: WillPopScope(
-        onWillPop: onWillPop,
+      body: PopScope(
+        onPopInvoked: willPop,
+        canPop: canPop,
         child: Center(
           child: bodyItem.elementAt(selectedIndex),
         ),
@@ -53,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor: Colors.grey.shade400,
         selectedItemColor: Colors.orange,
         currentIndex: selectedIndex,
+
         onTap: (int index) {
           setState(() {
             selectedIndex = index;

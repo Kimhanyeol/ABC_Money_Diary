@@ -81,7 +81,7 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
                         style: TextStyle(
                           fontSize: 15,
                           fontFamily: "Yeongdeok-Sea",
-                        )),
+                        ),),
                 ],
               ),
 

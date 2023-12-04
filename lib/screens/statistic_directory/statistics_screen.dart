@@ -1,16 +1,15 @@
-import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
 import 'package:abc_money_diary/screens/statistic_directory/abc_list_chart_card.dart';
 import 'package:abc_money_diary/screens/statistic_directory/circular_chart_card.dart';
 import 'package:abc_money_diary/screens/statistic_directory/list_chart_card.dart';
-import 'package:abc_money_diary/widgets/pair.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_holo_date_picker/date_picker.dart';
 import 'package:flutter_holo_date_picker/i18n/date_picker_i18n.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
+import '../../widgets/description_diary_widget.dart';
 import '../../widgets/total_abc_money.dart';
+import 'abc_circular_chart_card.dart';
 
 class StatisticScreen extends StatefulWidget {
   const StatisticScreen({super.key});
@@ -100,23 +99,21 @@ class _StatisticScreenState extends State<StatisticScreen> {
             ),
             actions: [
               IconButton(
-                onPressed: () => Fluttertoast.showToast(
-                  msg: diaryMonth,
-                  gravity: ToastGravity.BOTTOM,
-                  backgroundColor: Colors.redAccent,
-                  fontSize: 20,
-                  textColor: Colors.white,
-                  toastLength: Toast.LENGTH_SHORT,
-                ),
-                icon: Icon(
-                  Icons.question_answer_outlined,
-                  size: 30,
-                  color: Colors.white,
-                ),
-              ),
-              IconButton(
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                onPressed: null,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('ABC 가계부 알아보기',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Soyo")),
+                      content: DescriptionDiary(),
+                    ),
+                  );
+                },
                 icon: Icon(
                   Icons.help_outline,
                   size: 30,
@@ -144,6 +141,14 @@ class _StatisticScreenState extends State<StatisticScreen> {
 
                   //리스트표 부분
                   ListChartCard(diaryMonth: diaryMonth),
+
+                  //ABC 원형 통계부분
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: Card(
+                      child: AbcCircularChartCard(diaryMonth: diaryMonth),
+                    ),
+                  ),
 
                   //ABC 리스트표 부분
                   AspectRatio(

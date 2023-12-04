@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../repository/sql_diary_crud_repository.dart';
-import '../../widgets/none_information_widget.dart';
 import '../../widgets/pair.dart';
 import 'abc_list_category_screen.dart';
 
@@ -16,7 +15,6 @@ class AbcListChartCard extends StatefulWidget {
 
 class _AbcListChartCardState extends State<AbcListChartCard> {
   List<Pair> categoryMoney = [];
-  Map<String, String> categoryMap = {};
 
   Future<List<Pair>> _getABCcategory(String month, String abc) async {
     List<Pair> newList =
