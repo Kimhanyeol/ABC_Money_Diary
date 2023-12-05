@@ -120,7 +120,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   context: context,
                   builder: (context) {
                     return SizedBox(
-                      height: 600,
+                      height: 630,
                       child: WriteDiaryScreen(preDate: selectedDay),
                     );
                   },

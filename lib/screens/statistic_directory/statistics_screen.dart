@@ -137,7 +137,10 @@ class _StatisticScreenState extends State<StatisticScreen> {
                     height: 3,
                   ),
                   //원형 통계부분
-                  CircularChartCard(diaryMonth: diaryMonth),
+                  AspectRatio(
+                      aspectRatio: 1,
+                      child: Card(
+                          child: CircularChartCard(diaryMonth: diaryMonth))),
 
                   //리스트표 부분
                   ListChartCard(diaryMonth: diaryMonth),

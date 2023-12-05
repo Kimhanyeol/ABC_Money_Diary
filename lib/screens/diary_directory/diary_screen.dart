@@ -219,7 +219,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
       context: context,
       builder: (context) {
         return SizedBox(
-          height: 600,
+          height: 630,
           child: WriteDiaryScreen(),
         );
       },

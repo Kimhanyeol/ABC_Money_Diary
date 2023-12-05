@@ -35,7 +35,7 @@ class _EtcScreenState extends State<EtcScreen> {
   @override
   Widget build(BuildContext context) {
     int randomNumberPic = Random().nextInt(12);
-    int randomNumberAdvice = 9;
+    int randomNumberAdvice = Random().nextInt(10);
 
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +78,7 @@ class _EtcScreenState extends State<EtcScreen> {
 
                   var datas = snapshot.data!.reversed.toList();
 
-                  if(datas.isEmpty){
+                  if(datas.isEmpty || datas[0].b==0){
                     return AspectRatio(
                       aspectRatio: 1.5,
                       child: Card(

@@ -1,4 +1,3 @@
-import 'package:abc_money_diary/widgets/none_information_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -34,18 +33,18 @@ class _ABCListCategoryScreenState extends State<ABCListCategoryScreen> {
                 widget.datas.length,
                 (index) {
                   int money = widget.datas[index].b;
-                  double per = money / widget.sum * 100;
+                        double per = money == 0 ? 0 : money / widget.sum * 100;
 
-                  return Column(
-                    children: [
-                      Divider(
-                        thickness: 2,
-                        color: Colors.black,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(10),
-                        child: Row(
+                        return Column(
+                          children: [
+                            Divider(
+                              thickness: 2,
+                              color: Colors.black,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(10),
+                              child: Row(
                           mainAxisAlignment:
                               MainAxisAlignment.spaceBetween,
                           children: [

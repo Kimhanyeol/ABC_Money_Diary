@@ -10,6 +10,9 @@ void main() {
   initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
+//가계부 index를 임의로 정해주기 위해
+int diaryIndexId = 1;
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

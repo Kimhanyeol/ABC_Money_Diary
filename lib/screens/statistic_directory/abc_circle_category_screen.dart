@@ -75,7 +75,7 @@ class _AbcCircleCategoryScreenState extends State<AbcCircleCategoryScreen> {
 
       String category = widget.categoryMoney[i].a;
       int money = widget.categoryMoney[i].b;
-      double per = money / sum * 100;
+      double per = money == 0 ? 0 : money / sum * 100;
 
       //추후 이미지로 바꿀 수도 있음
       String categoryIcon = "*";

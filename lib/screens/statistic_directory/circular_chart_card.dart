@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../repository/sql_diary_crud_repository.dart';
-import '../../widgets/none_information_widget.dart';
 import '../../widgets/pair.dart';
 import 'circle_category_screen.dart';
 
@@ -31,12 +30,63 @@ class _CircularChartCardState extends State<CircularChartCard> {
       initialData: [],
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data!.isEmpty) {
-            return NoneInformationWidget();
+          //총 합 0일경우 방지를 위해
+          int sum = 0;
+          for (int i = 0; i < categoryMoney.length; i++) {
+            int money = categoryMoney[i].b;
+            sum += money;
           }
-          return CircleCategoryScreen(
-            categoryMap: categoryMap,
-            categoryMoney: categoryMoney,
+
+          if (snapshot.data!.isEmpty || sum == 0) {
+            return Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Circular Chart",
+                      style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.orange,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Yeongdeok-Sea"),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text('정보가 없습니다.'),
+                  ),
+                ),
+              ],
+            );
+          }
+
+          return Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Circular Chart",
+                style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Yeongdeok-Sea"),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              CircleCategoryScreen(
+                categoryMap: categoryMap,
+                categoryMoney: categoryMoney,
+              ),
+            ],
           );
         }
         return Center(child: CircularProgressIndicator());

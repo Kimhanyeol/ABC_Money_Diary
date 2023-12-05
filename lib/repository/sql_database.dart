@@ -37,8 +37,7 @@ class SqlDataBase {
             ${DiaryFields.category} text,
             ${DiaryFields.money} text not null,
             ${DiaryFields.contents} text,
-            ${DiaryFields.memo} text,
-            ${DiaryFields.picture} text
+            ${DiaryFields.memo} text
             )'''
     );
   }

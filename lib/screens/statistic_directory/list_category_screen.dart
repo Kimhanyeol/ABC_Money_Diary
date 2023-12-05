@@ -46,7 +46,7 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
                       widget.datas.length,
                           (index) {
                         int money = widget.datas[index].b;
-                        double per = money / widget.sum * 100;
+                        double per = money == 0 ? 0 :  money / widget.sum * 100;
 
                         return Column(
                           children: [

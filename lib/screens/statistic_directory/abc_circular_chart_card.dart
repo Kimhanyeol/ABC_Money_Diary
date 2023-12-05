@@ -34,7 +34,15 @@ class _AbcCircularChartCardState extends State<AbcCircularChartCard> {
       initialData: [],
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data!.isEmpty) {
+
+          //총 합 0일경우 방지를 위해
+          int sum = 0;
+          for(int i=0;i<categoryMoney.length;i++){
+            int money = categoryMoney[i].b;
+            sum += money;
+          }
+
+          if (snapshot.data!.isEmpty || sum==0) {
             return Column(
               children: [
                 Row(

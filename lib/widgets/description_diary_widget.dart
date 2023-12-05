@@ -17,7 +17,7 @@ class DescriptionDiary extends StatelessWidget {
 
             Divider(color: Colors.black,thickness: 2,),
 
-            Text('ABC 가계부는 지출을 크게 네 가지로 분류합니다.'),
+            Text('ABC 가계부는 지출을 크게 세 가지로 분류합니다.'),
 
             SizedBox(height: 10,),
 

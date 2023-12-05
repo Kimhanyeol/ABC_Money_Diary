@@ -1,7 +1,5 @@
 //날짜별 가계부 목록 작게 보여주는 것들
 
-import 'dart:convert';
-
 import 'package:abc_money_diary/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -177,12 +175,6 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
                 height: 20,
               ),
 
-              //사진 넣을곳
-              widget.diary.picture == ''
-                  ? SizedBox()
-                  : Image.memory(
-                      base64Decode(widget.diary.picture!),
-                    ),
             ],
           ),
         ),

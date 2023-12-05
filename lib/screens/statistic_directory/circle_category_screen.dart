@@ -19,54 +19,34 @@ class CircleCategoryScreen extends StatefulWidget {
 }
 
 class _CircleCategoryScreenState extends State<CircleCategoryScreen> {
+
+
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Card(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              "Circular Chart",
-              style: TextStyle(
-                  fontSize: 25,
-                  color: Colors.orange,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Yeongdeok-Sea"),
-            ),
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: PieChart(
-                  PieChartData(
-                      pieTouchData: PieTouchData(touchCallback:
-                          (FlTouchEvent event, pieTouchResponse) {
-                        setState(() {
-                          if (!event.isInterestedForInteractions ||
-                              pieTouchResponse == null ||
-                              pieTouchResponse.touchedSection == null) {
-                            touchedIndex = -1;
-                            return;
-                          }
-                          touchedIndex = pieTouchResponse
-                              .touchedSection!.touchedSectionIndex;
-                        });
-                      }),
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      sectionsSpace: 5,
-                      centerSpaceRadius: 50,
-                      sections: showingSections()),
-                ),
+    return Expanded(
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: PieChart(
+          PieChartData(
+              pieTouchData: PieTouchData(touchCallback:
+                  (FlTouchEvent event, pieTouchResponse) {
+                setState(() {
+                  if (!event.isInterestedForInteractions ||
+                      pieTouchResponse == null ||
+                      pieTouchResponse.touchedSection == null) {
+                    touchedIndex = -1;
+                    return;
+                  }
+                  touchedIndex = pieTouchResponse
+                      .touchedSection!.touchedSectionIndex;
+                });
+              }),
+              borderData: FlBorderData(
+                show: false,
               ),
-            ),
-          ],
+              sectionsSpace: 5,
+              centerSpaceRadius: 50,
+              sections: showingSections()),
         ),
       ),
     );
@@ -95,7 +75,7 @@ class _CircleCategoryScreenState extends State<CircleCategoryScreen> {
 
       String category = widget.categoryMoney[i].a;
       int money = widget.categoryMoney[i].b;
-      double per = money / sum * 100;
+      double per = money == 0 ? 0 : money / sum * 100;
 
       //추후 이미지로 바꿀 수도 있음
       String categoryIcon = "*";

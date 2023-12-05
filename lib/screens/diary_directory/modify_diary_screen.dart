@@ -1,18 +1,14 @@
 //가계부 수정하는 화면
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
 import 'package:abc_money_diary/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-import '../../widgets/select_category_widget.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/money_text_field_widget.dart';
+import '../../widgets/select_category_widget.dart';
 
 class ModifyDiaryScreen extends StatefulWidget {
   final Diary diary;
@@ -59,11 +55,12 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
       type: getABC(),
       date: getToday(),
       time: getTimeNow(),
-      money: moneyToCleanString(_moneyTextEditingController.text),
+      money: moneyToCleanString(_moneyTextEditingController.text) == ''
+          ? '0'
+          : moneyToCleanString(_moneyTextEditingController.text),
       contents: _contentTextEditingController.text,
       category: _categoryTextEditingController.text,
       memo: _memoTextEditingController.text,
-      picture: base64Image,
     );
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false);
     await SqlDiaryCrudRepository.update(modifyDiary);
@@ -71,162 +68,6 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
 
   }
 
-  // ABC 선택 관련 변수
-  String getABC(){
-    if (ABC == '') {
-      String preABC = widget.diary.type!;
-      return preABC;
-    }
-    return ABC;
-  }
-
-  String ABC ='';
-  bool aButton = false;
-  bool bButton = false;
-  bool cButton = false;
-  late List<bool> isSelected;
-
-  //ABC 버튼 선택
-  void onTapToggleButton(index) {
-    if (index == 0) {
-      aButton = true;
-      bButton = false;
-      cButton = false;
-      ABC = 'A';
-    } else if (index == 1) {
-      aButton = false;
-      bButton = true;
-      cButton = false;
-      ABC = 'B';
-    }
-    if (index == 2) {
-      aButton = false;
-      bButton = false;
-      cButton = true;
-      ABC = 'C';
-    }
-    setState(() {
-      isSelected = [aButton, bButton, cButton];
-    });
-  }
-
-  //날짜 선택 관련 변수
-  String selectedDate = '';
-
-  // 기본 오늘 날짜 구하는 곳
-  String getToday() {
-    if (selectedDate == "") {
-      String Today = widget.diary.date!;
-      return Today;
-    }
-    return selectedDate;
-  }
-
-  // 날짜 클릭 시 선택 화면 나오게 만드는 곳
-  Future onTapDateButton(BuildContext context) async {
-    DateTime? selected = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-
-      //날짜 선택 부분의 색깔 등등 테마 설정부분
-      builder: (context, child) {
-        return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: Colors.orange,
-                onPrimary: Colors.white,
-              ),
-            ),
-            child: child!);
-      },
-    );
-    if (selected != null) {
-      setState(() {
-        selectedDate = (DateFormat('yyyy-MM-dd (E)', 'ko')).format(selected);
-      });
-    }
-  }
-
-  //시간 선택 관련 변수
-  String selectedTime = "";
-
-  // 기본 지금 시간 구하는 곳
-  String getTimeNow() {
-    if (selectedTime == "") {
-      String NowTime = widget.diary.time!;
-      return NowTime;
-    }
-    return selectedTime;
-  }
-
-  // 시간 클릭 시 선택 화면 나오게 만드는 곳
-  Future onTapTimeButton(BuildContext context) async {
-    TimeOfDay? selected = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-      builder: (context, child) {
-        return Theme(
-            data: Theme.of(context).copyWith(
-                colorScheme: ColorScheme.light(
-              primary: Colors.orange,
-            )),
-            child: child!);
-      },
-    );
-
-    if (selected != null) {
-      setState(() {
-        if (selected.hour < 12 && selected.hour >= 10) {
-          if (selected.minute < 10) {
-            selectedTime = '오전 ${selected.hour}:0${selected.minute}';
-          } else {
-            selectedTime = '오전 ${selected.hour}:${selected.minute}';
-          }
-        }
-        else if(selected.hour < 10){
-          if (selected.minute < 10) {
-            selectedTime = '오전 0${selected.hour}:0${selected.minute}';
-          } else {
-            selectedTime = '오전 0${selected.hour}:${selected.minute}';
-          }
-        }
-        else if(selected.hour == 0){
-          if (selected.minute < 10) {
-            selectedTime = '오전 0${selected.hour}:0${selected.minute}';
-          } else {
-            selectedTime = '오전 0${selected.hour}:${selected.minute}';
-          }
-        }
-        else {
-          if (selected.minute < 10) {
-            selectedTime = '오후 ${selected.hour}:0${selected.minute}';
-          } else {
-            selectedTime = '오후 ${selected.hour}:${selected.minute}';
-          }
-        }
-      });
-    }
-  }
-
-  final ImagePicker picker = ImagePicker();
-  XFile? _image; // 카메라로 촬영한 이미지를 저장할 변수
-  String? base64Image;
-
-  //금액 부분 관련
-  bool isMoneyFocused = false;
-  FocusNode focusNode = FocusNode();
-
-  void addMoney(int addVal){
-    if( _moneyTextEditingController.text == "" ) {
-      _moneyTextEditingController.text = moneyToString(addVal);
-    } else{
-      int newVal = int.parse(_moneyTextEditingController.text.replaceAll(',', '')) + addVal;
-      _moneyTextEditingController.text = moneyToString(newVal);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -556,44 +397,6 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                         alignLabelWithHint: true,
                         labelStyle: TextStyle(color: Colors.brown.shade200),
 
-                        //오른쪽 아이콘
-                        //갤러리나 카메라에서 사진 업로드 하는 부분
-                        suffixIcon: PopupMenuButton<MenuType>(
-                          icon: Icon(Icons.camera_alt),
-                          onSelected: (MenuType result) async {
-                            //image를 가져와서 images에 저장
-                            //카메라 클릭 시 작동
-                            if (result.englishName == 'camera') {
-                              final XFile? pickedFile = await picker.pickImage(
-                                  source: ImageSource.camera);
-                              if (pickedFile != null) {
-                                setState(() {
-                                  _image = XFile(pickedFile.path);
-                                });
-                              }
-                            }
-
-                            //갤러리 클릭 시 작동
-                            if (result.englishName == 'gallery') {
-                              final XFile? pickedFile = await picker.pickImage(
-                                  source: ImageSource.gallery);
-                              if (pickedFile != null) {
-                                setState(() {
-                                  _image = XFile(pickedFile.path);
-                                });
-                              }
-                            }
-                          },
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              for (final value in MenuType.values)
-                                PopupMenuItem(
-                                    value: value,
-                                    child: Text(value.koreanName)),
-                            ];
-                          },
-                        ),
-
                         //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         contentPadding: EdgeInsets.symmetric(
@@ -609,11 +412,6 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
                   ),
                 ],
               ),
-            ),
-
-            //사진 보여주는 부분
-            Container(
-              child: _buildPhotoArea(),
             ),
 
             //수정버튼
@@ -648,33 +446,177 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
     );
   }
 
-  //사진 보여주는 영역
-  Widget _buildPhotoArea() {
-    if(_image != null ){
-      final bytes = File(_image!.path).readAsBytesSync();
-      base64Image =  base64Encode(bytes);
-      return Container(
-        color: Colors.grey,
-        width: 300,
-        height: 300,
-        child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드
-      );
+  // ABC 선택 관련 변수
+  String getABC() {
+    if (ABC == '') {
+      String preABC = widget.diary.type!;
+      return preABC;
     }
-    else {
-      base64Image = '';
-      return SizedBox();
+    return ABC;
+  }
+
+  String ABC = '';
+  bool aButton = false;
+  bool bButton = false;
+  bool cButton = false;
+  late List<bool> isSelected;
+
+  //ABC 버튼 선택
+  void onTapToggleButton(index) {
+    if (index == 0) {
+      aButton = true;
+      bButton = false;
+      cButton = false;
+      ABC = 'A';
+    } else if (index == 1) {
+      aButton = false;
+      bButton = true;
+      cButton = false;
+      ABC = 'B';
+    }
+    if (index == 2) {
+      aButton = false;
+      bButton = false;
+      cButton = true;
+      ABC = 'C';
+    }
+    setState(() {
+      isSelected = [aButton, bButton, cButton];
+    });
+  }
+
+  //날짜 선택 관련 변수
+  String selectedDate = '';
+
+  // 기본 오늘 날짜 구하는 곳
+  String getToday() {
+    if (selectedDate == "") {
+      String Today = widget.diary.date!;
+      return Today;
+    }
+    return selectedDate;
+  }
+
+  // 날짜 클릭 시 선택 화면 나오게 만드는 곳
+  Future onTapDateButton(BuildContext context) async {
+    DateTime? selected = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+
+      //날짜 선택 부분의 색깔 등등 테마 설정부분
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: Colors.orange,
+                onPrimary: Colors.white,
+              ),
+            ),
+            child: child!);
+      },
+    );
+    if (selected != null) {
+      setState(() {
+        selectedDate = (DateFormat('yyyy-MM-dd (E)', 'ko')).format(selected);
+      });
     }
   }
 
-  Widget makeButtons(){
+  //시간 선택 관련 변수
+  String selectedTime = "";
+
+  // 기본 지금 시간 구하는 곳
+  String getTimeNow() {
+    if (selectedTime == "") {
+      String NowTime = widget.diary.time!;
+      return NowTime;
+    }
+    return selectedTime;
+  }
+
+  // 시간 클릭 시 선택 화면 나오게 만드는 곳
+  Future onTapTimeButton(BuildContext context) async {
+    TimeOfDay? selected = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+                colorScheme: ColorScheme.light(
+              primary: Colors.orange,
+            )),
+            child: child!);
+      },
+    );
+
+    if (selected != null) {
+      setState(() {
+        if (selected.hour < 12 && selected.hour >= 10) {
+          if (selected.minute < 10) {
+            selectedTime = '오전 ${selected.hour}:0${selected.minute}';
+          } else {
+            selectedTime = '오전 ${selected.hour}:${selected.minute}';
+          }
+        } else if (selected.hour < 10) {
+          if (selected.minute < 10) {
+            selectedTime = '오전 0${selected.hour}:0${selected.minute}';
+          } else {
+            selectedTime = '오전 0${selected.hour}:${selected.minute}';
+          }
+        } else if (selected.hour == 0) {
+          if (selected.minute < 10) {
+            selectedTime = '오전 0${selected.hour}:0${selected.minute}';
+          } else {
+            selectedTime = '오전 0${selected.hour}:${selected.minute}';
+          }
+        } else {
+          if (selected.minute < 10) {
+            selectedTime = '오후 ${selected.hour}:0${selected.minute}';
+          } else {
+            selectedTime = '오후 ${selected.hour}:${selected.minute}';
+          }
+        }
+      });
+    }
+  }
+
+  //금액 부분 관련
+  bool isMoneyFocused = false;
+  FocusNode focusNode = FocusNode();
+
+  void addMoney(int addVal) {
+    if (_moneyTextEditingController.text == "") {
+      _moneyTextEditingController.text = moneyToString(addVal);
+    } else {
+      int newVal =
+          int.parse(_moneyTextEditingController.text.replaceAll(',', '')) +
+              addVal;
+      _moneyTextEditingController.text = moneyToString(newVal);
+    }
+  }
+
+  Widget makeButtons() {
     return isMoneyFocused
         ? Column(
-      children: [
-        Row(
-          children: [
-            CustomButton( onTap: () { addMoney(1000); }, text: "+1천",),
-            CustomButton( onTap: () { addMoney(5000); }, text: "+5천",),
-            CustomButton( onTap: () { addMoney(10000); }, text: "+1만",),
+            children: [
+              Row(
+                children: [
+                  CustomButton(
+                    onTap: () {
+                      addMoney(1000);
+                    },
+                    text: "+1천",
+                  ),
+                  CustomButton(
+                    onTap: () {
+                      addMoney(5000);
+                    },
+                    text: "+5천",
+                  ),
+                  CustomButton( onTap: () { addMoney(10000); }, text: "+1만",),
             CustomButton( onTap: () { addMoney(50000); }, text: "+5만",),
             CustomButton( onTap: () { addMoney(100000); }, text: "+10만",),
           ],
@@ -732,15 +674,4 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
     ).then((value) => update());
   }
 
-}
-
-//카메라 아이콘 클릭 시 카메라로 사진을 찍을 건지 갤러리에서 선택할건지 목록
-enum MenuType {
-  camera('camera', '카메라'),
-  gallery('gallery', '갤러리');
-
-  const MenuType(this.englishName, this.koreanName);
-
-  final String englishName;
-  final String koreanName;
 }

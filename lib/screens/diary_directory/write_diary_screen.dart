@@ -1,14 +1,11 @@
 //신규 가계부 작성하는 화면
 
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:abc_money_diary/main.dart';
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
 import 'package:abc_money_diary/widgets/description_write_diary_widget.dart';
 import 'package:abc_money_diary/widgets/select_category_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../widgets/custom_button.dart';
@@ -34,21 +31,22 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       type: abc,
       date: getToday(),
       time: getTimeNow(),
-      money: moneyToCleanString(_moneyTextEditingController.text),
+      money: moneyToCleanString(_moneyTextEditingController.text) == ''
+          ? '0'
+          : moneyToCleanString(_moneyTextEditingController.text),
       contents: _contentTextEditingController.text,
       category: _categoryTextEditingController.text == ''
           ? '기타'
           : _categoryTextEditingController.text,
       memo: _memoTextEditingController.text,
-      picture: base64Image,
     );
 
     Navigator.pop(context);
     await SqlDiaryCrudRepository.create(diary);
+    diaryIndexId++;
+
     update();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -380,44 +378,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                         alignLabelWithHint: true,
                         labelStyle: TextStyle(color: Colors.brown.shade200),
 
-                        //오른쪽 아이콘
-                        //갤러리나 카메라에서 사진 업로드 하는 부분
-                        suffixIcon: PopupMenuButton<MenuType>(
-                          icon: Icon(Icons.camera_alt),
-                          onSelected: (MenuType result) async {
-                            //image를 가져와서 images에 저장
-                            //카메라 클릭 시 작동
-                            if (result.englishName == 'camera') {
-                              final XFile? pickedFile = await picker.pickImage(
-                                  source: ImageSource.camera);
-                              if (pickedFile != null) {
-                                setState(() {
-                                  _image = XFile(pickedFile.path);
-                                });
-                              }
-                            }
-
-                            //갤러리 클릭 시 작동
-                            if (result.englishName == 'gallery') {
-                              final XFile? pickedFile = await picker.pickImage(
-                                  source: ImageSource.gallery);
-                              if (pickedFile != null) {
-                                setState(() {
-                                  _image = XFile(pickedFile.path);
-                                });
-                              }
-                            }
-                          },
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              for (final value in MenuType.values)
-                                PopupMenuItem(
-                                    value: value,
-                                    child: Text(value.koreanName)),
-                            ];
-                          },
-                        ),
-
                         //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         contentPadding: EdgeInsets.symmetric(
@@ -433,11 +393,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                   ),
                 ],
               ),
-            ),
-
-            //사진 보여주는 부분
-            Container(
-              child: _buildPhotoArea(),
             ),
 
             //저장버튼
@@ -622,10 +577,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     }
   }
 
-  //사진 관련
-  final ImagePicker picker = ImagePicker();
-  XFile? _image; // 카메라로 촬영한 이미지를 저장할 변수
-  String? base64Image;
 
   bool isMoneyFocused = false;
   FocusNode focusNode = FocusNode();
@@ -656,43 +607,6 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   }
 
 
-  //사진 보여주는 영역
-  Widget _buildPhotoArea() {
-    if (_image != null) {
-      final bytes = File(_image!.path).readAsBytesSync();
-
-      if (bytes.length > 100000) {
-        return SizedBox();
-      }
-
-      base64Image = base64Encode(bytes);
-
-      Image picture = Image.file(
-        File(_image!.path),
-      );
-
-      return Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Container(
-                  color: Colors.grey,
-                  width: 300,
-                  height: 300,
-                  child: picture, //가져온 이미지를 화면에 띄워주는 코드
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    } else {
-      base64Image = '';
-      return SizedBox();
-    }
-  }
 
   //금액 입력 부분에 천원, 만원, 이런 식으로 클릭해서 입력하는 버튼
   Widget makeButtons(){
@@ -767,15 +681,4 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     ).then((value) => update());
   }
 
-}
-
-//카메라 아이콘 클릭 시 카메라로 사진을 찍을 건지 갤러리에서 선택할건지 목록
-enum MenuType {
-  camera('camera', '카메라'),
-  gallery('gallery', '갤러리');
-
-  const MenuType(this.englishName, this.koreanName);
-
-  final String englishName;
-  final String koreanName;
 }
