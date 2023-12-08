@@ -18,6 +18,7 @@ class DescriptionWriteDiary extends StatelessWidget {
             Text('1. 상단에 A, B, C 를 선택합니다.',style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold, fontFamily: "Soyo")),
             SizedBox(height: 10,),
             Text('선택하지 않을 경우 기본 값은 \n\'C\'로 저장됩니다.'),
+            Text('\nA, B, C 에 대한 설명은 \n기본 화면 우측 상단에 위치한 \n버튼을 눌러 확인할 수 있습니다.'),
 
             SizedBox(height: 20,),
 
@@ -36,14 +37,21 @@ class DescriptionWriteDiary extends StatelessWidget {
             SizedBox(height: 20,),
 
 
-            Text('4. 분류를 선택합니다.',style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold, fontFamily: "Soyo")),
+            Text('4. 결제 방법을 입력합니다.',style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold, fontFamily: "Soyo")),
+            SizedBox(height: 10,),
+            Text('입력하지 않을 경우 기본 값은 \n\'카드\'로 저장됩니다.'),
+
+            SizedBox(height: 20,),
+
+
+            Text('5. 분류를 선택합니다.',style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold, fontFamily: "Soyo")),
             SizedBox(height: 10,),
             Text('선택하지 않을 경우 기본 값은 \n\'기타\'로 저장됩니다.'),
 
             SizedBox(height: 20,),
 
 
-            Text('5. 내용과 메모.',style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold, fontFamily: "Soyo")),
+            Text('6. 내용과 메모.',style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold, fontFamily: "Soyo")),
             SizedBox(height: 10,),
             Text('내용과 메모는 자율선택입니다. \n입력해도 되고 입력하지 않아도 괜찮습니다.'),
 

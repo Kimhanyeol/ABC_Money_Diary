@@ -114,21 +114,36 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
                   fontSize: 15,
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Text(
                 '시간 : ${widget.diary.time}',
                 style: TextStyle(
                   fontSize: 15,
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Text(
                 '분류 : ${widget.diary.category}',
                 style: TextStyle(
                   fontSize: 15,
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                '결제 방법 : ${widget.diary.payment}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -146,35 +161,38 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
                       ),
                     ),
                   ),
-
                 ],
               ),
               SizedBox(
                 height: 20,
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '메모 : ',
-                    style: TextStyle(
-                      fontSize: 15,
+              if (widget.diary.memo != '')
+                Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '메모 : ',
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            '${widget.diary.memo}',
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      '${widget.diary.memo}',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-
+                  ],
+                ),
             ],
           ),
         ),
@@ -207,7 +225,7 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
     );
   }
 
-  String moneyToString(String money){
+  String moneyToString(String money) {
     if (money == "") {
       money = "0";
     }

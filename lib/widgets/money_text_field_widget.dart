@@ -22,7 +22,9 @@ class MoneyTextField extends StatelessWidget {
 
       onChanged: (string) {
         if(string.isEmpty) return ;
-        string = moneyToString(int.parse(string.replaceAll(',', '')));
+        int money = int.parse(string.replaceAll(',', ''));
+        if(money>1000000000000) money = 1000000000000;
+        string = moneyToString(money);
         controller.value = TextEditingValue(
           text: string,
           selection: TextSelection.collapsed(offset: string.length),

@@ -159,7 +159,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             Text(
                               'Tip) 날짜를 길게 누르면 가계부 작성이 가능합니다',
                               style: TextStyle(fontSize: 13, color: Colors.grey),
-                            )
+                            ),
+                            Text(
+                              '선택 가능한 날짜는 \'오늘\' 까지 입니다',
+                              style: TextStyle(fontSize: 13, color: Colors.grey),
+                            ),
                           ],
                         ),
                       );

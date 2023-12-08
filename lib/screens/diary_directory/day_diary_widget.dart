@@ -64,24 +64,13 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
                       fontFamily: "Yeongdeok-Sea",
                     ),
                   ),
-                  if (widget.diary.type == 'A')
-                    Text('C항목 ￦ 0',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: "Yeongdeok-Sea",
-                        )),
-                  if (widget.diary.type == 'B')
-                    Text('C항목 ￦ 0',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: "Yeongdeok-Sea",
-                        )),
-                  if (widget.diary.type == 'C')
-                    Text('C항목 ￦ ${moneyToString(widget.diary.money!)}',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: "Yeongdeok-Sea",
-                        ),),
+                  Text(
+                    widget.diary.time!,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontFamily: "Yeongdeok-Sea",
+                    ),
+                  ),
                 ],
               ),
 
@@ -99,9 +88,9 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(widget.diary.type!),
-                    Text(widget.diary.time!),
                     Text(widget.diary.category!),
-                    Text('￦ ${moneyToString(widget.diary.money!)}'),
+                    Text(widget.diary.payment!),
+                    Text('￦ ${moneyToString(widget.diary.money!)}', overflow: TextOverflow.fade),
                   ],
                 ),
               ),

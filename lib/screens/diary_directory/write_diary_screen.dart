@@ -5,6 +5,7 @@ import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
 import 'package:abc_money_diary/widgets/description_write_diary_widget.dart';
 import 'package:abc_money_diary/widgets/select_category_widget.dart';
+import 'package:abc_money_diary/widgets/select_payment_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -39,6 +40,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
           ? '기타'
           : _categoryTextEditingController.text,
       memo: _memoTextEditingController.text,
+      payment: _paymentTextEditingController.text == '' ? '카드' : _paymentTextEditingController.text,
     );
 
     Navigator.pop(context);
@@ -245,6 +247,58 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                     makeButtons(),
                   ],
                 ),
+              ),
+            ),
+
+            //결제 방법 선택하는 부분
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Text(
+                    '결제 방법',
+                    style: TextStyle(
+                      fontFamily: "HakgyoansimWoojuR",
+                      fontWeight: FontWeight.w600,
+                      fontSize: 25,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  Icon(Icons.chevron_right_rounded, color: Colors.grey),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                      child: TextField(
+                        onTap: _onTapPayment,
+                        controller: _paymentTextEditingController,
+
+                        canRequestFocus: false,
+                        //키보드 안올라오게 만드는 거
+                        keyboardType: TextInputType.none,
+
+                        decoration: InputDecoration(
+                          labelText: '결제 방법을 선택하세요',
+                          alignLabelWithHint: true,
+                          labelStyle: TextStyle(color: Colors.brown.shade200),
+                          hintStyle: TextStyle(color: Colors.brown.shade200),
+
+                          //텍스트를 입력하면 라벨 텍스트는 안보이게 만드는 코드
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 5,
+                          ),
+                        ),
+
+                        style: TextStyle(
+                          color: Colors.brown,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
 
@@ -633,6 +687,9 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       money = "0";
     }
     int result = int.parse(money.replaceAll(',', ''));
+    if(result>1000000000000) {
+      result = 1000000000000;
+    }
     return result;
   }
 
@@ -644,8 +701,11 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
     String result = money.replaceAll(',', '');
     return result;
   }
-
-
+  
+  //결제 방법 부분 컨트롤러
+  final TextEditingController _paymentTextEditingController =
+  TextEditingController();
+  
   //분류 부분 컨트롤러
   final TextEditingController _categoryTextEditingController =
   TextEditingController();
@@ -662,6 +722,25 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   final TextEditingController _memoTextEditingController =
       TextEditingController();
 
+
+  void _onTapPayment() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 80,
+          child: SelectPaymentWidget(paymentController: _paymentTextEditingController)
+        );
+      },
+      barrierColor: Colors.transparent,
+      backgroundColor: Colors.white,
+      isScrollControlled: true,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+    ).then((value) => update());
+  }
+  
   void _onTapcategory() {
     showModalBottomSheet(
       context: context,
@@ -675,7 +754,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       barrierColor: Colors.transparent,
       backgroundColor: Colors.white,
       isScrollControlled: true,
-      showDragHandle: false,
+      showDragHandle: true,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
     ).then((value) => update());

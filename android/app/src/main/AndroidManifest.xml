@@ -2,7 +2,7 @@
     <application
         android:label="ABC가계부"
         android:name="${applicationName}"
-        android:icon="@mipmap/money_diary_logo">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
