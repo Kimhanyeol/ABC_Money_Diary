@@ -1,6 +1,7 @@
 import 'package:abc_money_diary/screens/calendar_screen.dart';
 import 'package:abc_money_diary/screens/diary_directory/diary_screen.dart';
 import 'package:abc_money_diary/screens/advice_screen.dart';
+import 'package:abc_money_diary/screens/search_screen.dart';
 import 'package:abc_money_diary/screens/statistic_directory/statistics_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -76,6 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
             label: '달력',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: '검색',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.analytics_outlined),
             label: '통계',
           ),
@@ -92,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
 List bodyItem = [
   DiaryScreen(),
   CalendarScreen(),
+  SearchScreen(),
   StatisticScreen(),
   EtcScreen(),
 ];

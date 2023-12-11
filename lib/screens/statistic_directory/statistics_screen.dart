@@ -136,11 +136,17 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   SizedBox(
                     height: 3,
                   ),
+
                   //원형 통계부분
                   AspectRatio(
-                      aspectRatio: 1,
-                      child: Card(
-                          child: CircularChartCard(diaryMonth: diaryMonth))),
+                    aspectRatio: 1,
+                    child: Card(
+                      elevation: 4,
+                      surfaceTintColor: Colors.white,
+                      color: Colors.white,
+                      child: CircularChartCard(diaryMonth: diaryMonth),
+                    ),
+                  ),
 
                   //리스트표 부분
                   ListChartCard(diaryMonth: diaryMonth),
@@ -149,6 +155,9 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   AspectRatio(
                     aspectRatio: 1,
                     child: Card(
+                      elevation: 4,
+                      surfaceTintColor: Colors.white,
+                      color: Colors.white,
                       child: AbcCircularChartCard(diaryMonth: diaryMonth),
                     ),
                   ),
@@ -157,6 +166,9 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   AspectRatio(
                     aspectRatio: 1,
                     child: Card(
+                      elevation: 4,
+                      surfaceTintColor: Colors.white,
+                      color: Colors.white,
                       child: AbcListChartCard(diaryMonth: diaryMonth),
                     ),
                   ),

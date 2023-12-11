@@ -17,7 +17,6 @@ class TotalAbcMoney extends StatelessWidget {
     }
 
 
-    
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Container(

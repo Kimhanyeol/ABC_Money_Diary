@@ -18,6 +18,8 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
     return AspectRatio(
       aspectRatio: 1,
       child: Card(
+          elevation: 4,
+          surfaceTintColor: Colors.white,
           color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(5),

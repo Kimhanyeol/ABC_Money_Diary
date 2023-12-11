@@ -89,6 +89,7 @@ class _DayDiaryDetailWidgetState extends State<DayDiaryDetailWidget> {
       titleTextStyle: TextStyle(
           color: Colors.red, fontSize: 50, fontWeight: FontWeight.w600),
       scrollable: true,
+      surfaceTintColor: Colors.white,
 
       //상세내용부분
       content: SizedBox(

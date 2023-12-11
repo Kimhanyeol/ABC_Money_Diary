@@ -73,12 +73,10 @@ class _EtcScreenState extends State<EtcScreen> {
             FutureBuilder(
               future: _getABCcategory(DateTime.now().toString()),
               builder: (context, snapshot) {
-
-                if(snapshot.hasData){
-
+                if (snapshot.hasData) {
                   var datas = snapshot.data!.reversed.toList();
 
-                  if(datas.isEmpty || datas[0].b==0){
+                  if (datas.isEmpty || datas[0].b == 0) {
                     return AspectRatio(
                       aspectRatio: 1.5,
                       child: Card(

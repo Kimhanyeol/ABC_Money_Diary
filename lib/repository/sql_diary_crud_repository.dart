@@ -40,82 +40,14 @@ class SqlDiaryCrudRepository {
     ).toList();
   }
 
-  // A 항목 가계부 목록 전체 불러오기
-  static Future<List<Diary>> getListA() async {
+  //가계부 검색해서 한 달치 항목 불러오기
+  static Future<List<Diary>> getSearchList(String text) async {
     var db = await SqlDataBase().database;
-    var result = await db.query(
-      tableName,
-      columns: [
-        DiaryFields.id,
-        DiaryFields.money,
-        DiaryFields.type,
-        DiaryFields.date,
-        DiaryFields.time,
-        DiaryFields.category,
-        DiaryFields.contents,
-        DiaryFields.memo,
-        DiaryFields.payment,
-      ],
-      where: '${DiaryFields.type} = ?',
-      whereArgs: ['A'],
-      orderBy: DiaryFields.time,
-    );
-
-    return result.map(
-      (data) {
-        return Diary.fromJson(data);
-      },
-    ).toList();
-  }
-
-  // B 항목 가계부 목록 전체 불러오기
-  static Future<List<Diary>> getListB() async {
-    var db = await SqlDataBase().database;
-    var result = await db.query(
-      tableName,
-      columns: [
-        DiaryFields.id,
-        DiaryFields.money,
-        DiaryFields.type,
-        DiaryFields.date,
-        DiaryFields.time,
-        DiaryFields.category,
-        DiaryFields.contents,
-        DiaryFields.memo,
-        DiaryFields.payment,
-      ],
-      where: '${DiaryFields.type} = ?',
-      whereArgs: ['B'],
-      orderBy: DiaryFields.time,
-    );
-
-    return result.map(
-          (data) {
-        return Diary.fromJson(data);
-      },
-    ).toList();
-  }
-
-  // C 항목 가계부 목록 전체 불러오기
-  static Future<List<Diary>> getListC() async {
-    var db = await SqlDataBase().database;
-    var result = await db.query(
-      tableName,
-      columns: [
-        DiaryFields.id,
-        DiaryFields.money,
-        DiaryFields.type,
-        DiaryFields.date,
-        DiaryFields.time,
-        DiaryFields.category,
-        DiaryFields.contents,
-        DiaryFields.memo,
-        DiaryFields.payment,
-      ],
-      where: '${DiaryFields.type} = ?',
-      whereArgs: ['C'],
-      orderBy: DiaryFields.time,
-    );
+    var result = await db.rawQuery(
+        "SELECT * FROM $tableName WHERE ${DiaryFields.memo} LIKE '%$text%' OR ${DiaryFields.category} LIKE '%$text%' "
+            "OR ${DiaryFields.contents} LIKE '%$text%' OR ${DiaryFields.type} LIKE '%$text%'"
+            "ORDER BY ${DiaryFields.date} ASC ;",
+        null);
 
     return result.map(
           (data) {
@@ -131,56 +63,7 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getMonthList(String month) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime')"
-        "ORDER BY ${DiaryFields.time} ;",
-        null);
-
-    return result.map(
-          (data) {
-        return Diary.fromJson(data);
-      },
-    ).toList();
-  }
-
-  // A 한 달치 가계부 불러오기
-  static Future<List<Diary>> getMonthListA(String month) async {
-    var db = await SqlDataBase().database;
-    var result = await db.rawQuery(
-        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'A'"
-        "ORDER BY ${DiaryFields.time} ;",
-        null);
-
-    return result.map(
-          (data) {
-        return Diary.fromJson(data);
-      },
-    ).toList();
-  }
-
-  // B 한 달치 가계부 불러오기
-  static Future<List<Diary>> getMonthListB(String month) async {
-    var db = await SqlDataBase().database;
-    var result = await db.rawQuery(
-        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'B'"
-        "ORDER BY ${DiaryFields.time} ;",
-        null);
-
-    return result.map(
-          (data) {
-        return Diary.fromJson(data);
-      },
-    ).toList();
-  }
-
-  // C 한 달치 가계부 불러오기
-  static Future<List<Diary>> getMonthListC(String month) async {
-    var db = await SqlDataBase().database;
-    var result = await db.rawQuery(
-        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') "
-        "AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime') AND ${DiaryFields.type} = 'C'"
+        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime')"
         "ORDER BY ${DiaryFields.time} ;",
         null);
 

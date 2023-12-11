@@ -28,93 +28,92 @@ class _DiaryScreenState extends State<DiaryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          AppBar(
-            //스테이터스바 투명하게 만드는 부분
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.orange,
-              statusBarIconBrightness: Brightness.light,
-              systemNavigationBarColor: Colors.orange,
-              systemNavigationBarIconBrightness: Brightness.light,
-            ),
-            //앱바 높이
-            toolbarHeight: 70,
-            //글자 색
-            //foregroundColor: Colors.white,
-            //앱 바 색
-            backgroundColor: Colors.orange,
-            //앱 바 밑에 음영 사라지게 만드는 코드
-            elevation: 2,
+      appBar: AppBar(
+        //스테이터스바 투명하게 만드는 부분
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.orange,
+          statusBarIconBrightness: Brightness.light,
+          systemNavigationBarColor: Colors.orange,
+          systemNavigationBarIconBrightness: Brightness.light,
+        ),
+        //앱바 높이
+        toolbarHeight: 70,
+        //글자 색
+        //foregroundColor: Colors.white,
+        //앱 바 색
+        backgroundColor: Colors.orange,
+        //앱 바 밑에 음영 사라지게 만드는 코드
+        elevation: 2,
 
-            leadingWidth: double.infinity,
+        leadingWidth: double.infinity,
 
-            leading: Row(
-              children: [
-                IconButton(
-                    onPressed: onTapLeftChevron,
-                    icon: Icon(
-                      Icons.chevron_left_outlined,
-                      color: Colors.white,
-                    )),
-                TextButton(
-                  onPressed: () => DatePicker.showSimpleDatePicker(
-                    context,
-                    initialDate: selectedDate,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2090),
-                    dateFormat: "yyyy년-MMMM",
-                    locale: DateTimePickerLocale.ko,
-                    looping: false,
-                    cancelText: '취소',
-                    confirmText: '확인',
-                  ).then((date) {
-                    if (date != null) {
-                      setState(() {
-                        selectedDate = date;
-                        diaryMonth =
-                            DateFormat('yyyy-MM-dd').format(selectedDate);
-                      });
-                    }
-                  }),
-                  child: Text(
-                    getTimeNow(),
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white,
-                      fontFamily: "Yeongdeok-Sea",
-                    ),
-                  ),
-                ),
-                IconButton(
-                    onPressed: onTapRightChevron,
-                    icon: Icon(
-                      Icons.chevron_right_outlined,
-                      color: Colors.white,
-                    )),
-              ],
-            ),
-            actions: [
-              IconButton(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('ABC 가계부 알아보기',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold, fontFamily: "Soyo")),
-                      content: DescriptionDiary(),
-                    ),
-                  );
-                },
+        leading: Row(
+          children: [
+            IconButton(
+                onPressed: onTapLeftChevron,
                 icon: Icon(
-                  Icons.help_outline,
-                  size: 30,
+                  Icons.chevron_left_outlined,
                   color: Colors.white,
+                )),
+            TextButton(
+              onPressed: () => DatePicker.showSimpleDatePicker(
+                context,
+                initialDate: selectedDate,
+                firstDate: DateTime(2000),
+                lastDate: DateTime.now(),
+                dateFormat: "yyyy년-MMMM",
+                locale: DateTimePickerLocale.ko,
+                looping: false,
+                cancelText: '취소',
+                confirmText: '확인',
+              ).then((date) {
+                if (date != null) {
+                  setState(() {
+                    selectedDate = date;
+                    diaryMonth =
+                        DateFormat('yyyy-MM-dd').format(selectedDate);
+                  });
+                }
+              }),
+              child: Text(
+                getTimeNow(),
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.white,
+                  fontFamily: "Yeongdeok-Sea",
                 ),
               ),
-            ],
+            ),
+            IconButton(
+                onPressed: diaryMonth==DateTime.now().toString() ? null : onTapRightChevron,
+                icon: Icon(
+                  Icons.chevron_right_outlined,
+                  color: Colors.white,
+                )),
+          ],
+        ),
+        actions: [
+          IconButton(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('ABC 가계부 알아보기',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold, fontFamily: "Soyo")),
+                  content: DescriptionDiary(),
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.help_outline,
+              size: 30,
+              color: Colors.white,
+            ),
           ),
-
+        ],
+      ),
+      body: Column(
+        children: [
           // ABC 항목 별 금액 표시해주는 곳
           TotalAbcMoney(
             diaryMonth: diaryMonth,
@@ -152,9 +151,9 @@ class _DiaryScreenState extends State<DiaryScreen> {
                       ),
                     );
                   }
-                  
+
                   return GroupedListView(
-                    elements: datas!,
+                    elements: datas,
                     groupBy: (element) => element.date,
                     order: GroupedListOrder.DESC,
                     padding: EdgeInsets.all(0),
@@ -197,10 +196,10 @@ class _DiaryScreenState extends State<DiaryScreen> {
       //가계부 작성화면으로 이동하는 플로팅버튼 부분
       floatingActionButton: FloatingActionButton(
         onPressed: _onTapWriteDiaryButton,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.orange,
         child: Icon(
           Icons.add,
-          color: Colors.orange,
+          color: Colors.white,
           size: 40,
         ),
       ),
@@ -253,9 +252,16 @@ class _DiaryScreenState extends State<DiaryScreen> {
   }
 
   void onTapRightChevron() {
-    selectedDate = DateTime(selectedDate.year, selectedDate.month + 1);
-    diaryMonth = DateFormat('yyyy-MM-dd').format(selectedDate);
-    update();
+    if(selectedDate == DateTime(DateTime.now().year, DateTime.now().month)){
+      update();
+    }
+
+    else {
+      selectedDate = DateTime(selectedDate.year, selectedDate.month + 1);
+      diaryMonth = DateFormat('yyyy-MM-dd').format(selectedDate);
+      update();
+    }
+
   }
 
   void onTapDescription() {}
