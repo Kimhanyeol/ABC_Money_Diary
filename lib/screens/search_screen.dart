@@ -13,11 +13,13 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  String searchText = '';
   final TextEditingController _searchTextController = TextEditingController();
+  String searchText ='';
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(
         //스테이터스바 투명하게 만드는 부분
