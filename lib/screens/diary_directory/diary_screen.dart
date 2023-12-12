@@ -85,7 +85,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               ),
             ),
             IconButton(
-                onPressed: diaryMonth==DateTime.now().toString() ? null : onTapRightChevron,
+                onPressed: selectedDate!=DateTime.now() ? onTapRightChevron : null,
                 icon: Icon(
                   Icons.chevron_right_outlined,
                   color: Colors.white,
@@ -112,6 +112,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
           ),
         ],
       ),
+
+
       body: Column(
         children: [
           // ABC 항목 별 금액 표시해주는 곳
@@ -241,6 +243,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
   //앱바 날짜 바꿀 때 작동하는 부분들
   String getTimeNow() {
     diaryMonth = DateFormat('yyyy-MM-dd').format(selectedDate);
+    selectedDate = selectedDate = DateTime(selectedDate.year, selectedDate.month);
     return DateFormat('yyyy 년 MM 월').format(selectedDate);
   }
 

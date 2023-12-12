@@ -50,12 +50,15 @@ class _SearchScreenState extends State<SearchScreen> {
           Padding(
             padding: const EdgeInsets.all(10),
             child: Container(
+              height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(40),
                 color: Colors.black,
               ),
-              padding: EdgeInsets.all(2),
+              padding: EdgeInsets.all(1),
               child: SearchBar(
+                hintText: '검색',
+                hintStyle: MaterialStatePropertyAll(TextStyle(color: Colors.grey)),
                 backgroundColor: MaterialStatePropertyAll(Colors.white),
                 leading: Icon(Icons.search),
                 elevation: MaterialStatePropertyAll(0),

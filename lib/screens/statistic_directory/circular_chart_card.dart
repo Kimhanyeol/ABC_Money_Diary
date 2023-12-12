@@ -79,9 +79,6 @@ class _CircularChartCardState extends State<CircularChartCard> {
                     fontWeight: FontWeight.bold,
                     fontFamily: "Yeongdeok-Sea"),
               ),
-              SizedBox(
-                height: 10,
-              ),
               CircleCategoryScreen(
                 categoryMap: categoryMap,
                 categoryMoney: categoryMoney,

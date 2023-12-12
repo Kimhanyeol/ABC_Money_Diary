@@ -86,7 +86,7 @@ class _CircleCategoryScreenState extends State<CircleCategoryScreen> {
 
       list.add(PieChartSectionData(
         //차트 색깔 선택부분인데 맘에 드는 색깔이 없음 흠;;
-        color: Colors.teal[(index - i) * hop],
+        color: Colors.blue[(index - i) * hop],
         title: '',
         value: per,
         radius: radius,

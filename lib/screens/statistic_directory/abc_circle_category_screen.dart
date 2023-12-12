@@ -87,7 +87,7 @@ class _AbcCircleCategoryScreenState extends State<AbcCircleCategoryScreen> {
       list.add(PieChartSectionData(
         //차트 색깔 선택부분인데 맘에 드는 색깔이 없음 흠;;
         color: widget.index == 0
-            ? Colors.blue[(index - i) * hop]
+            ? Colors.teal[(index - i) * hop]
             : widget.index == 1
                 ? Colors.orange[(index - i) * hop]
                 : Colors.red[(index - i) * hop],
