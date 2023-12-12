@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../repository/sql_diary_crud_repository.dart';
-import '../../widgets/none_information_widget.dart';
 import '../../widgets/pair.dart';
 import 'list_category_screen.dart';
 
@@ -31,9 +30,6 @@ class _ListChartCardState extends State<ListChartCard> {
       initialData: [],
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data!.isEmpty) {
-            return NoneInformationWidget();
-          }
 
           var datas = snapshot.data!.reversed.toList();
 
@@ -43,9 +39,29 @@ class _ListChartCardState extends State<ListChartCard> {
             sum += money;
           }
 
-          return ListCategoryScreen(
-            datas: datas,
-            sum: sum,
+          return Column(
+            children: [
+              //타이틀
+              Container(
+                height: 65,
+                width: double.infinity,
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  "Total List",
+                  style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Yeongdeok-Sea"),
+                ),
+              ),
+              Expanded(
+                child: ListCategoryScreen(
+                  datas: datas,
+                  sum: sum,
+                ),
+              ),
+            ],
           );
         }
         return Center(
