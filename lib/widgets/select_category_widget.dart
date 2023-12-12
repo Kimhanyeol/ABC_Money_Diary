@@ -295,6 +295,75 @@ class _SelectCategoryWidgetState extends State<SelectCategoryWidget> {
             ),
           ],
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () {
+                widget.categoryController.text = category17;
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
+              ),
+              child: Text(
+                category17,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                widget.categoryController.text = category18;
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
+              ),
+              child: Text(
+                category18,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                widget.categoryController.text = category19;
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.orange.shade100),
+              ),
+              child: Text(
+                category19,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                widget.categoryController.text = category20;
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.red.shade100),
+              ),
+              child: Text(
+                category20,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Yeongdeok-Sea",
+                    fontSize: 15),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

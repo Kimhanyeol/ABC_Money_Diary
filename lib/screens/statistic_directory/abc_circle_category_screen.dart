@@ -69,7 +69,7 @@ class _AbcCircleCategoryScreenState extends State<AbcCircleCategoryScreen> {
 
     int hop = index < 5 ? 200 : 100;
 
-    for (int i = 0; i < index && i < 9; i++) {
+    for (int i = 0; i < index && i < 20; i++) {
       final isTouched = i == touchedIndex;
       final radius = isTouched ? 70.0 : 60.0;
 

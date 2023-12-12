@@ -87,10 +87,10 @@ class _DayDiaryWidgetState extends State<DayDiaryWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(widget.diary.type!),
-                    Text(widget.diary.category!),
-                    Text(widget.diary.payment!),
-                    Text('￦ ${moneyToString(widget.diary.money!)}', overflow: TextOverflow.fade),
+                    Flexible(flex: 1,child: Text(widget.diary.type!, overflow: TextOverflow.ellipsis)),
+                    Flexible(flex: 1,child: Text(widget.diary.category!, overflow: TextOverflow.ellipsis)),
+                    Flexible(flex: 1,child: Text(widget.diary.payment!, overflow: TextOverflow.ellipsis)),
+                    Flexible(flex: 1,child: Text('￦ ${moneyToString(widget.diary.money!)}', overflow: TextOverflow.ellipsis)),
                   ],
                 ),
               ),

@@ -69,7 +69,7 @@ class _CircleCategoryScreenState extends State<CircleCategoryScreen> {
 
     int hop = index < 5 ? 200 : 100;
 
-    for (int i = 0; i < index && i < 9; i++) {
+    for (int i = 0; i < index && i < 20; i++) {
       final isTouched = i == touchedIndex;
       final radius = isTouched ? 70.0 : 60.0;
 
@@ -98,7 +98,7 @@ class _CircleCategoryScreenState extends State<CircleCategoryScreen> {
               style: TextStyle(color: Colors.orange),
             ),
           ),
-          backgroundColor: Colors.orange[(index - i) * hop]!,
+          backgroundColor: Colors.orange[(index - i) * hop],
           label: isTouched
               ? TextOutline(
                   text: "$category: ${(per).toStringAsFixed(2)}%",

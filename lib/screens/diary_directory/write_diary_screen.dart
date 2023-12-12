@@ -733,7 +733,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
         );
       },
       barrierColor: Colors.transparent,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.brown.shade400,
       isScrollControlled: true,
       showDragHandle: true,
       shape: RoundedRectangleBorder(
@@ -746,13 +746,13 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
       context: context,
       builder: (context) {
         return SizedBox(
-          height: 250,
+          height: 300,
           child: SelectCategoryWidget(
               categoryController: _categoryTextEditingController),
         );
       },
       barrierColor: Colors.transparent,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.brown.shade400,
       isScrollControlled: true,
       showDragHandle: true,
       shape: RoundedRectangleBorder(

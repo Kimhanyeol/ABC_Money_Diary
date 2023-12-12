@@ -728,7 +728,7 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
         );
       },
       barrierColor: Colors.transparent,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.brown.shade400,
       isScrollControlled: true,
       showDragHandle: true,
       shape: RoundedRectangleBorder(
@@ -741,15 +741,15 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
       context: context,
       builder: (context) {
         return SizedBox(
-          height: 250,
+          height: 300,
           child: SelectCategoryWidget(
               categoryController: _categoryTextEditingController),
         );
       },
       barrierColor: Colors.transparent,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.brown.shade400,
       isScrollControlled: true,
-      showDragHandle: false,
+      showDragHandle: true,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
     ).then((value) => update());
   }
