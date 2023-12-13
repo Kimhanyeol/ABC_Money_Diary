@@ -155,6 +155,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                   }
 
                   return GroupedListView(
+
                     elements: datas,
                     groupBy: (element) => element.date,
                     order: GroupedListOrder.DESC,

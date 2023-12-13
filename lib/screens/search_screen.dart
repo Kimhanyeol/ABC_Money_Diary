@@ -107,13 +107,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     );
                   }
 
-                  return ListView(
-                    children: List.generate(
-                      datas.length,
-                      (index) => DayDiaryWidget(
+                  return ListView.builder(
+                    itemCount: datas.length,
+
+                    itemBuilder: (BuildContext context, int index) {
+                      return DayDiaryWidget(
                         diary: datas[index],
-                      ),
-                    ),
+                      );
+                    },
                   );
                 } else {
                   return Center(

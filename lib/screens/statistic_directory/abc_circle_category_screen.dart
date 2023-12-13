@@ -102,7 +102,7 @@ class _AbcCircleCategoryScreenState extends State<AbcCircleCategoryScreen> {
               style: TextStyle(color: Colors.orange),
             ),
           ),
-          backgroundColor: Colors.orange[(index - i) * hop]!,
+          backgroundColor: Colors.orange[(index - i) * hop],
           label: isTouched
               ? TextOutline(
                   text: "$category: ${(per).toStringAsFixed(2)}%",
