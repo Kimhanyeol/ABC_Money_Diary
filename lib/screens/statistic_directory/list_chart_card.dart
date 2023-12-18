@@ -59,6 +59,7 @@ class _ListChartCardState extends State<ListChartCard> {
                 child: ListCategoryScreen(
                   datas: datas,
                   sum: sum,
+                  month: widget.diaryMonth,
                 ),
               ),
             ],

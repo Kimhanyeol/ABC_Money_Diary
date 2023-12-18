@@ -130,6 +130,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Future<List<Diary>> _loadDiaryList(String text) async {
-    return await SqlDiaryCrudRepository.getSearchList(text);
+    return await SqlDiaryCrudRepository.getSearchAllList(text);
   }
 }

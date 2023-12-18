@@ -40,12 +40,47 @@ class SqlDiaryCrudRepository {
     ).toList();
   }
 
-  //가계부 검색해서 한 달치 항목 불러오기
-  static Future<List<Diary>> getSearchList(String text) async {
+  //가계부 검색해서 전부 불러오기
+  static Future<List<Diary>> getSearchAllList(String text) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
         "SELECT * FROM $tableName WHERE ${DiaryFields.memo} LIKE '%$text%' OR ${DiaryFields.category} LIKE '%$text%' "
             "OR ${DiaryFields.contents} LIKE '%$text%' OR ${DiaryFields.type} LIKE '%$text%'"
+            "ORDER BY ${DiaryFields.date} ASC ;",
+        null);
+
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
+  }
+
+  //가계부 검색해서 한 달치 항목 불러오기
+  static Future<List<Diary>> getSearchList(String text, String month) async {
+    var db = await SqlDataBase().database;
+    var result = await db.rawQuery(
+        "SELECT * FROM $tableName WHERE (${DiaryFields.memo} LIKE '%$text%' OR ${DiaryFields.category} LIKE '%$text%' "
+            "OR ${DiaryFields.contents} LIKE '%$text%' OR ${DiaryFields.type} LIKE '%$text%')"
+            "AND ${DiaryFields.date} >= date('$month','start of month','localtime') AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime')"
+            "ORDER BY ${DiaryFields.date} ASC ;",
+        null);
+
+    return result.map(
+          (data) {
+        return Diary.fromJson(data);
+      },
+    ).toList();
+  }
+
+  //가계부 검색해서 한 달치 항목 불러오기 ABC
+  static Future<List<Diary>> getSearchABCList(String text, String month, String abc) async {
+    var db = await SqlDataBase().database;
+    var result = await db.rawQuery(
+        "SELECT * FROM $tableName WHERE (${DiaryFields.memo} LIKE '%$text%' OR ${DiaryFields.category} LIKE '%$text%' "
+            "OR ${DiaryFields.contents} LIKE '%$text%' OR ${DiaryFields.type} LIKE '%$text%')"
+            "AND ${DiaryFields.date} >= date('$month','start of month','localtime') AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime')"
+            "AND ${DiaryFields.type} = '$abc'"
             "ORDER BY ${DiaryFields.date} ASC ;",
         null);
 

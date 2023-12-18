@@ -79,6 +79,8 @@ class _AbcListChartCardState extends State<AbcListChartCard> {
                 child: ABCListCategoryScreen(
                   datas: datas,
                   sum: sum,
+                  month: widget.diaryMonth,
+                  abc: abc[index],
                 ),
               ),
             ],

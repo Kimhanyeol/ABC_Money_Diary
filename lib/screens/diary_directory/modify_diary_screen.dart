@@ -54,24 +54,70 @@ class _ModifyDiaryScreenState extends State<ModifyDiaryScreen> {
 
   //수정버튼 누르면 작동하는 곳
   void onTapModifyButton(Diary diary) async {
-    var modifyDiary = diary.clone(
-      type: getABC(),
-      date: getToday(),
-      time: getTimeNow(),
-      money: moneyToCleanString(_moneyTextEditingController.text) == ''
-          ? '0'
-          : moneyToCleanString(_moneyTextEditingController.text),
-      contents: _contentTextEditingController.text,
-      category: _categoryTextEditingController.text,
-      memo: _memoTextEditingController.text,
-      payment: _paymentTextEditingController.text,
-    );
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),), (route) => false);
-    await SqlDiaryCrudRepository.update(modifyDiary);
-    update();
+    if (moneyToCleanString(_moneyTextEditingController.text) == '0'|| moneyToCleanString(_moneyTextEditingController.text) == '') {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('금액이 없습니다'),
+          content: Text('저장하시겠습니까?'),
+          actions: [
+            ElevatedButton(
+                onPressed: () async {
+                  var modifyDiary = diary.clone(
+                    type: getABC(),
+                    date: getToday(),
+                    time: getTimeNow(),
+                    money: moneyToCleanString(
+                                _moneyTextEditingController.text) ==
+                            ''
+                        ? '0'
+                        : moneyToCleanString(_moneyTextEditingController.text),
+                    contents: _contentTextEditingController.text,
+                    category: _categoryTextEditingController.text,
+                    memo: _memoTextEditingController.text,
+                    payment: _paymentTextEditingController.text,
+                  );
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(),
+                      ),
+                      (route) => false);
+                  await SqlDiaryCrudRepository.update(modifyDiary);
+                  update();
+                },
+                child: Text('예')),
+            ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('아니요')),
+          ],
+        ),
+      );
+    }
 
+    else {
+      var modifyDiary = diary.clone(
+        type: getABC(),
+        date: getToday(),
+        time: getTimeNow(),
+        money: moneyToCleanString(_moneyTextEditingController.text) == ''
+            ? '0'
+            : moneyToCleanString(_moneyTextEditingController.text),
+        contents: _contentTextEditingController.text,
+        category: _categoryTextEditingController.text,
+        memo: _memoTextEditingController.text,
+        payment: _paymentTextEditingController.text,
+      );
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+          (route) => false);
+      await SqlDiaryCrudRepository.update(modifyDiary);
+      update();
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {

@@ -29,6 +29,7 @@ class MoneyTextField extends StatelessWidget {
           text: string,
           selection: TextSelection.collapsed(offset: string.length),
         );
+
       },
 
       decoration: InputDecoration(

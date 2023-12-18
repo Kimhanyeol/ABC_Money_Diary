@@ -1,6 +1,5 @@
 //신규 가계부 작성하는 화면
 
-import 'package:abc_money_diary/main.dart';
 import 'package:abc_money_diary/models/diary_model.dart';
 import 'package:abc_money_diary/repository/sql_diary_crud_repository.dart';
 import 'package:abc_money_diary/widgets/description_write_diary_widget.dart';
@@ -28,26 +27,69 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
   //저장버튼 누르면 작동하는 곳
   void onTapSaveButton() async {
 
-    var diary = Diary(
-      type: abc,
-      date: getToday(),
-      time: getTimeNow(),
-      money: moneyToCleanString(_moneyTextEditingController.text) == ''
-          ? '0'
-          : moneyToCleanString(_moneyTextEditingController.text),
-      contents: _contentTextEditingController.text,
-      category: _categoryTextEditingController.text == ''
-          ? '기타'
-          : _categoryTextEditingController.text,
-      memo: _memoTextEditingController.text,
-      payment: _paymentTextEditingController.text == '' ? '카드' : _paymentTextEditingController.text,
-    );
+    if (moneyToCleanString(_moneyTextEditingController.text) == '0' || moneyToCleanString(_moneyTextEditingController.text) == '') {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('금액이 없습니다'),
+          content: Text('저장하시겠습니까?'),
+          actions: [
+            ElevatedButton(
+                onPressed: () async {
+                  var diary = Diary(
+                    type: abc,
+                    date: getToday(),
+                    time: getTimeNow(),
+                    money: moneyToCleanString(_moneyTextEditingController.text) == ''
+                        ? '0'
+                        : moneyToCleanString(_moneyTextEditingController.text),
+                    contents: _contentTextEditingController.text,
+                    category: _categoryTextEditingController.text == ''
+                        ? '기타'
+                        : _categoryTextEditingController.text,
+                    memo: _memoTextEditingController.text,
+                    payment: _paymentTextEditingController.text == ''
+                        ? '카드'
+                        : _paymentTextEditingController.text,
+                  );
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  await SqlDiaryCrudRepository.create(diary);
 
-    Navigator.pop(context);
-    await SqlDiaryCrudRepository.create(diary);
-    diaryIndexId++;
+                  update();
+                },
+                child: Text('예')),
+            ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('아니요')),
+          ],
+        ),
+      );
+    }
 
-    update();
+    else{
+      var diary = Diary(
+        type: abc,
+        date: getToday(),
+        time: getTimeNow(),
+        money: moneyToCleanString(_moneyTextEditingController.text) == ''
+            ? '0'
+            : moneyToCleanString(_moneyTextEditingController.text),
+        contents: _contentTextEditingController.text,
+        category: _categoryTextEditingController.text == ''
+            ? '기타'
+            : _categoryTextEditingController.text,
+        memo: _memoTextEditingController.text,
+        payment: _paymentTextEditingController.text == ''
+            ? '카드'
+            : _paymentTextEditingController.text,
+      );
+      Navigator.pop(context);
+      await SqlDiaryCrudRepository.create(diary);
+
+      update();
+    }
+
   }
 
   @override
@@ -379,6 +421,7 @@ class _WriteDiaryScreenState extends State<WriteDiaryScreen> {
                           labelText: '내용을 입력하세요',
                           hintText: 'ex) 점심 값, 군것질...',
                           alignLabelWithHint: true,
+
                           labelStyle: TextStyle(color: Colors.brown.shade200),
                           hintStyle: TextStyle(color: Colors.brown.shade200),
 
