@@ -14,7 +14,7 @@
 
 ## 배포 주소
 
-> **안드로이드 - 플레이스토어** : [준비중]() <br>
+> **안드로이드 - 플레이스토어** : [링크](https://play.google.com/store/apps/details?id=com.abc_money_diary&pcampaignid=web_share) <br>
 
 </br>
 
