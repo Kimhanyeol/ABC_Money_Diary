@@ -98,7 +98,7 @@ class SqlDiaryCrudRepository {
   static Future<List<Diary>> getMonthList(String month) async {
     var db = await SqlDataBase().database;
     var result = await db.rawQuery(
-        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') AND ${DiaryFields.date} <= date('$month','start of month','+1 month','-1 day','localtime')"
+        "SELECT * FROM $tableName WHERE ${DiaryFields.date} >= date('$month','start of month','localtime') AND ${DiaryFields.date} <= date('$month','start of month','+1 month','localtime')"
         "ORDER BY ${DiaryFields.time} ;",
         null);
 
