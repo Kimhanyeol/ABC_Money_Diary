@@ -14,7 +14,11 @@
 
 ## 배포 주소
 
-> **안드로이드 - 플레이스토어** : [링크](https://play.google.com/store/apps/details?id=com.abc_money_diary&pcampaignid=web_share) <br>
+> **안드로이드 - 플레이스토어** : [기간만료] <br>
+
+<img width="300" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FrqtMm%2FbtsFdGfZjQH%2F1B7SijkjAFLCIdN7XRRSO1%2Fimg.jpg"/>
+구글 개발자 계정 갱신 실패로 인해 삭제됨
+
 
 </br>
 
